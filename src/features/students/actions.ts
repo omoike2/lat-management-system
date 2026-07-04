@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 import type { ActionResult } from "@/types";
 import { RegisterStudentSchema } from "./schema";
 
-export async function registerStudent(raw: unknown): Promise<ActionResult<{ id: string }>> {
+export async function registerStudent(raw: unknown): Promise<ActionResult> {
   const parsed = RegisterStudentSchema.safeParse(raw);
   if (!parsed.success) {
     return { success: false, error: parsed.error.errors[0]?.message ?? "Validation failed" };
@@ -21,14 +21,15 @@ export async function registerStudent(raw: unknown): Promise<ActionResult<{ id: 
 
   const student = await db.student.create({ data: { name, email, matric, department, level } });
 
-  // Set httpOnly cookie with UUID — not guessable, not accessible from JS
+  // Set httpOnly + secure cookie — UUID is unguessable, not returned to client
   const cookieStore = await cookies();
   cookieStore.set("studentId", student.id, {
     httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
     path: "/student",
     maxAge: 60 * 60 * 24 * 365,
     sameSite: "lax",
   });
 
-  return { success: true, data: { id: student.id } };
+  return { success: true };
 }
