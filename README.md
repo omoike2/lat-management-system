@@ -19,7 +19,7 @@ LASU Academic Timetable — constraint-based timetable generation and student no
 ### Prerequisites
 
 - Node.js 20+
-- pnpm 9+
+- pnpm 11+
 - PostgreSQL (local or Supabase connection string)
 
 ### Install
@@ -143,22 +143,9 @@ Change notifications fire synchronously from `timetable/actions.ts` after any en
 
 ## Deployment
 
-Push to `main` → Vercel auto-deploys.
+See [docs/deployment.md](docs/deployment.md) for the full guide (Supabase, Resend, Vercel, cron setup, post-deploy verification, troubleshooting).
 
-Set all env vars in Vercel dashboard. Add cron in `vercel.json`:
-
-```json
-{
-  "crons": [
-    {
-      "path": "/api/cron/notify",
-      "schedule": "*/5 * * * *"
-    }
-  ]
-}
-```
-
-Vercel sends `Authorization: Bearer <CRON_SECRET>` automatically when configured.
+Quick path: set env vars in Vercel dashboard → push to `main` → auto-deploys. `vercel.json` cron is already configured.
 
 ---
 
