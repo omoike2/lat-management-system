@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Course {
+  id         String           @id @default(cuid())
+  code       String           @unique
+  title      String
+  department String
+  level      Int
+  units      Int
+  weeklyFreq Int              @default(2)
+  lecturers  LecturerCourse[]
+  entries    TimetableEntry[]
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+}
+
+model Lecturer {
+  id         String           @id @default(cuid())
+  name       String
+  email      String           @unique
+  department String?
+  courses    LecturerCourse[]
+  entries    TimetableEntry[]
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+}
+
+model LecturerCourse {
+  lecturer   Lecturer @relation(fields: [lecturerId], references: [id], onDelete: Cascade)
+  lecturerId String
+  course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId   String
+
+  @@id([lecturerId, courseId])
+}
+
+model Venue {
+  id      String           @id @default(cuid())
+  name    String           @unique
+  capacity Int
+  type    VenueType        @default(LECTURE_HALL)
+  entries TimetableEntry[]
+}
+
+enum VenueType {
+  LECTURE_HALL
+  LAB
+  SEMINAR_ROOM
+}
+
+model TimeSlot {
+  id        String           @id @default(cuid())
+  dayOfWeek Int
+  startTime String
+  endTime   String
+  available Boolean          @default(true)
+  entries   TimetableEntry[]
+
+  @@unique([dayOfWeek, startTime])
+}
+
+model TimetableEntry {
+  id           String   @id @default(cuid())
+  course       Course   @relation(fields: [courseId], references: [id])
+  courseId     String
+  lecturer     Lecturer @relation(fields: [lecturerId], references: [id])
+  lecturerId   String
+  venue        Venue    @relation(fields: [venueId], references: [id])
+  venueId      String
+  slot         TimeSlot @relation(fields: [slotId], references: [id])
+  slotId       String
+  semester     String
+  reminderSent Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([venueId, slotId, semester])
+  @@unique([lecturerId, slotId, semester])
+  @@unique([courseId, slotId, semester])
+}
+
+model Student {
+  id         String   @id @default(cuid())
+  name       String
+  matric     String   @unique
+  email      String   @unique
+  department String
+  level      Int
+  createdAt  DateTime @default(now())
+}
+
+model Admin {
+  id           String @id @default(cuid())
+  email        String @unique
+  passwordHash String
+}

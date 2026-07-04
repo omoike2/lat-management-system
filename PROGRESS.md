@@ -1,19 +1,19 @@
 # LAT — Build Progress
 
-Last updated: 2026-07-04  ·  Current phase: not started
+Last updated: 2026-07-04  ·  Current phase: 1
 
 ---
 
-## Phase 0 — Scaffold & tooling  [ ]
+## Phase 0 — Scaffold & tooling  [x]
 
-- [ ] `pnpm dlx create-next-app` (TS, App Router, Tailwind, src dir)
-- [ ] Add deps: prisma, next-auth@beta, zod, resend, bcryptjs, lucide-react, shadcn/ui
-- [ ] Configure tsconfig strict + ESLint
-- [ ] Add package.json scripts: `dev build lint db:push db:studio db:seed db:reset`
-- [ ] Create `.env.example` (all vars from CLAUDE §ENV)
-- [ ] `.gitignore` entry for `.env.local`
-- [ ] Verify: `pnpm dev` boots default page
-- [ ] `pnpm test && pnpm build && pnpm lint` → commit `feat(phase-0): scaffold and tooling`
+- [x] `pnpm dlx create-next-app` (TS, App Router, Tailwind, src dir)
+- [x] Add deps: prisma, next-auth@beta, zod, resend, bcryptjs, lucide-react, shadcn/ui
+- [x] Configure tsconfig strict + ESLint
+- [x] Add package.json scripts: `dev build lint db:push db:studio db:seed db:reset`
+- [x] Create `.env.example` (all vars from CLAUDE §ENV)
+- [x] `.gitignore` entry for `.env.local`
+- [x] Verify: `pnpm dev` boots default page
+- [x] `pnpm test && pnpm build && pnpm lint` → commit `feat(phase-0): scaffold and tooling`
 
 ## Phase 1 — Data layer  [ ]
 
