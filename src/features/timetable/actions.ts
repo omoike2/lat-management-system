@@ -2,15 +2,25 @@
 
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
+import { auth } from "@/lib/auth";
 import type { ActionResult } from "@/types";
 import type { ConflictReport } from "./types";
 import { generate } from "./generator";
 import { GenerateSchema, ManualAssignSchema, UpdateEntrySchema } from "./schema";
 import { checkVenueClash, checkLecturerClash, checkGroupClash, type EntryMinimal } from "./constraints";
 
+async function requireAdmin(): Promise<ActionResult | null> {
+  const session = await auth();
+  if (!session) return { success: false, error: "Unauthorized" };
+  return null;
+}
+
 export async function generateTimetable(
   raw: unknown
 ): Promise<ActionResult<{ assigned: number; conflicts: ConflictReport[] }>> {
+  const session = await auth();
+  if (!session) return { success: false, error: "Unauthorized" };
+
   const parsed = GenerateSchema.safeParse(raw);
   if (!parsed.success) {
     return { success: false, error: parsed.error.errors[0]?.message ?? "Validation failed" };
@@ -44,6 +54,9 @@ export async function generateTimetable(
 }
 
 export async function updateEntry(raw: unknown): Promise<ActionResult> {
+  const deny = await requireAdmin();
+  if (deny) return deny;
+
   const parsed = UpdateEntrySchema.safeParse(raw);
   if (!parsed.success) {
     return { success: false, error: parsed.error.errors[0]?.message ?? "Validation failed" };
@@ -93,12 +106,18 @@ export async function updateEntry(raw: unknown): Promise<ActionResult> {
 }
 
 export async function deleteEntry(id: string): Promise<ActionResult> {
+  const deny = await requireAdmin();
+  if (deny) return deny;
+
   await db.timetableEntry.delete({ where: { id } });
   revalidatePath("/admin/timetable");
   return { success: true };
 }
 
 export async function manualAssign(raw: unknown): Promise<ActionResult> {
+  const deny = await requireAdmin();
+  if (deny) return deny;
+
   const parsed = ManualAssignSchema.safeParse(raw);
   if (!parsed.success) {
     return { success: false, error: parsed.error.errors[0]?.message ?? "Validation failed" };

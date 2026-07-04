@@ -76,7 +76,7 @@ Venues:
 - [ ] Verify: full CRUD all three; validation errors surface; search + pagination work
 - [ ] `pnpm test && pnpm build && pnpm lint` → commit `feat(phase-4): CRUD slices courses lecturers venues`
 
-## Phase 5 — Timetable generation engine  [ ]
+## Phase 5 — Timetable generation engine  [x]
 
 - [ ] `features/timetable/constraints.ts` — pure checkers: checkVenueClash, checkLecturerClash, checkGroupClash
 - [ ] `features/timetable/generator.ts` — greedy CSP w/ backtracking, returns `{ entries, conflicts }`

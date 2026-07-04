@@ -2,10 +2,20 @@
 
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
+import { auth } from "@/lib/auth";
 import type { ActionResult } from "@/types";
 import { CreateCourseSchema, UpdateCourseSchema } from "./schema";
 
+async function requireAdmin(): Promise<ActionResult | null> {
+  const session = await auth();
+  if (!session) return { success: false, error: "Unauthorized" };
+  return null;
+}
+
 export async function createCourse(raw: unknown): Promise<ActionResult<{ id: string }>> {
+  const session = await auth();
+  if (!session) return { success: false, error: "Unauthorized" };
+
   const parsed = CreateCourseSchema.safeParse(raw);
   if (!parsed.success) {
     return { success: false, error: parsed.error.errors[0]?.message ?? "Validation failed" };
@@ -20,6 +30,9 @@ export async function createCourse(raw: unknown): Promise<ActionResult<{ id: str
 }
 
 export async function updateCourse(raw: unknown): Promise<ActionResult> {
+  const deny = await requireAdmin();
+  if (deny) return deny;
+
   const parsed = UpdateCourseSchema.safeParse(raw);
   if (!parsed.success) {
     return { success: false, error: parsed.error.errors[0]?.message ?? "Validation failed" };
@@ -38,12 +51,18 @@ export async function updateCourse(raw: unknown): Promise<ActionResult> {
 }
 
 export async function deleteCourse(id: string): Promise<ActionResult> {
+  const deny = await requireAdmin();
+  if (deny) return deny;
+
   await db.course.delete({ where: { id } });
   revalidatePath("/admin/courses");
   return { success: true };
 }
 
 export async function assignLecturer(courseId: string, lecturerId: string): Promise<ActionResult> {
+  const deny = await requireAdmin();
+  if (deny) return deny;
+
   await db.lecturerCourse.upsert({
     where: { lecturerId_courseId: { lecturerId, courseId } },
     create: { lecturerId, courseId },
@@ -54,6 +73,9 @@ export async function assignLecturer(courseId: string, lecturerId: string): Prom
 }
 
 export async function unassignLecturer(courseId: string, lecturerId: string): Promise<ActionResult> {
+  const deny = await requireAdmin();
+  if (deny) return deny;
+
   await db.lecturerCourse.delete({
     where: { lecturerId_courseId: { lecturerId, courseId } },
   });

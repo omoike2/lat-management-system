@@ -2,10 +2,20 @@
 
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
+import { auth } from "@/lib/auth";
 import type { ActionResult } from "@/types";
 import { CreateLecturerSchema, UpdateLecturerSchema } from "./schema";
 
+async function requireAdmin(): Promise<ActionResult | null> {
+  const session = await auth();
+  if (!session) return { success: false, error: "Unauthorized" };
+  return null;
+}
+
 export async function createLecturer(raw: unknown): Promise<ActionResult<{ id: string }>> {
+  const session = await auth();
+  if (!session) return { success: false, error: "Unauthorized" };
+
   const parsed = CreateLecturerSchema.safeParse(raw);
   if (!parsed.success) {
     return { success: false, error: parsed.error.errors[0]?.message ?? "Validation failed" };
@@ -20,6 +30,9 @@ export async function createLecturer(raw: unknown): Promise<ActionResult<{ id: s
 }
 
 export async function updateLecturer(raw: unknown): Promise<ActionResult> {
+  const deny = await requireAdmin();
+  if (deny) return deny;
+
   const parsed = UpdateLecturerSchema.safeParse(raw);
   if (!parsed.success) {
     return { success: false, error: parsed.error.errors[0]?.message ?? "Validation failed" };
@@ -38,7 +51,9 @@ export async function updateLecturer(raw: unknown): Promise<ActionResult> {
 }
 
 export async function deleteLecturer(id: string): Promise<ActionResult> {
-  // Cascade via LecturerCourse (onDelete: Cascade in schema)
+  const deny = await requireAdmin();
+  if (deny) return deny;
+
   await db.lecturer.delete({ where: { id } });
   revalidatePath("/admin/lecturers");
   return { success: true };
