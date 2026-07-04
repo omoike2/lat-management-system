@@ -29,29 +29,20 @@ LAT Management System deploys to **Vercel** (hosting + cron) with **Supabase** (
 
 ---
 
-## 2. Email — Resend
+## 2. Email — Gmail SMTP
 
-> **Important:** The app's hosting domain (`.vercel.app`) does not affect email delivery. What matters is the **FROM address domain** in Resend. Without a verified domain, Resend's shared sender (`onboarding@resend.dev`) can only deliver to the email address used to sign up for Resend — students will not receive emails.
+The app sends email via Gmail SMTP using a **Gmail App Password** — free, no domain purchase required, delivers to any email address.
 
-### For real student email delivery (recommended)
+### Setup
 
-1. Register any domain (~$1–3/yr from Namecheap, Cloudflare Registrar, etc.).
-2. In the Resend dashboard → **Domains** → add your domain → add the provided DNS records.
-3. Use `notifications@yourdomain.com` (or similar) as the FROM address.
-4. Create an account at [resend.com](https://resend.com) → **API Keys** → generate key → set as `RESEND_API_KEY`.
-5. Update the `from` field in `src/features/notifications/trigger.ts`:
-   ```ts
-   from: "LAT Notifications <notifications@yourdomain.com>",
-   ```
+1. Use any Gmail account (create a dedicated one like `lat.lasu.notify@gmail.com` if preferred).
+2. Enable 2-Step Verification on the account: **Google Account → Security → 2-Step Verification**.
+3. Generate an App Password: **Security → 2-Step Verification → App Passwords** → choose "Mail" → copy the 16-character password.
+4. Set environment variables:
+   - `GMAIL_USER` = the Gmail address (e.g. `lat.lasu.notify@gmail.com`)
+   - `GMAIL_APP_PASSWORD` = the 16-character app password (spaces optional)
 
-### For testing/demo only
-
-Skip domain purchase. Resend provides `onboarding@resend.dev` as a shared sender but it only delivers to your own Resend account email. Use your own email as a student during testing.
-
-In `src/features/notifications/trigger.ts` set:
-```ts
-from: "LAT Notifications <onboarding@resend.dev>",
-```
+The FROM address in emails will be the Gmail address. Students receive emails at whatever address they registered with.
 
 ---
 
@@ -64,7 +55,8 @@ All variables required in Vercel dashboard and `.env.local` for local dev:
 | `DATABASE_URL` | Supabase pooled connection string | `postgresql://postgres.[ref]:[pass]@aws-0-[region].pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1` |
 | `NEXTAUTH_SECRET` | Random 32-byte base64 string | `openssl rand -base64 32` |
 | `NEXTAUTH_URL` | Canonical deployment URL | `https://your-app.vercel.app` |
-| `RESEND_API_KEY` | Resend API key | `re_abc123...` |
+| `GMAIL_USER` | Gmail address used to send emails | `lat.lasu.notify@gmail.com` |
+| `GMAIL_APP_PASSWORD` | Gmail App Password (not login password) | `xxxx xxxx xxxx xxxx` |
 | `ADMIN_EMAIL` | Admin login email | `admin@lasu.edu.ng` |
 | `ADMIN_PASSWORD_HASH` | bcrypt hash of admin password | see below |
 | `CRON_SECRET` | Token validating cron requests | `openssl rand -base64 32` |
@@ -207,8 +199,9 @@ createdb lat_dev
 - If Prisma migrations fail, try the direct URL (port 5432) for `db:push`.
 
 **Emails not sending**
-- Confirm `RESEND_API_KEY` is valid and the `from` address domain is verified in Resend.
-- Check Resend dashboard logs for delivery errors.
+- Confirm `GMAIL_USER` and `GMAIL_APP_PASSWORD` are set correctly.
+- The App Password must be generated with 2-Step Verification enabled — your regular Gmail password will not work.
+- Gmail may block the first send if the account has no prior app activity; check Gmail's security alerts inbox and approve the access.
 
 **Cron not firing**
 - Check cron-job.org dashboard — confirm the job is enabled and not erroring.

@@ -1,8 +1,12 @@
+"use server";
+
 import { db } from "@/lib/db";
 import { mailer } from "@/lib/mailer";
 import { reminderEmailHtml, changeEmailHtml } from "./templates";
 import type { ChangeType } from "@/types";
 import { DAY_LABELS } from "@/types";
+
+const FROM = `LAT System <${process.env.GMAIL_USER}>`;
 
 export async function sendChangeNotification(
   entryId: string,
@@ -21,20 +25,30 @@ export async function sendChangeNotification(
   });
   if (students.length === 0) return;
 
-  const emails = students.map((s) => ({
-    from: "LAT System <noreply@lasu.edu.ng>",
-    to: s.email,
-    subject: `${changeType === "cancellation" ? "Class Cancelled" : changeType === "venue" ? "Venue Change" : "Schedule Change"}: ${entry.course.code}`,
-    html: changeEmailHtml({
-      studentName: s.name,
-      courseCode: entry.course.code,
-      courseName: entry.course.title,
-      changeType,
-      details,
-    }),
-  }));
+  const subject = `${
+    changeType === "cancellation"
+      ? "Class Cancelled"
+      : changeType === "venue"
+        ? "Venue Change"
+        : "Schedule Change"
+  }: ${entry.course.code}`;
 
-  await mailer.batch.send(emails).catch(console.error);
+  await Promise.allSettled(
+    students.map((s) =>
+      mailer.sendMail({
+        from: FROM,
+        to: s.email,
+        subject,
+        html: changeEmailHtml({
+          studentName: s.name,
+          courseCode: entry.course.code,
+          courseName: entry.course.title,
+          changeType,
+          details,
+        }),
+      })
+    )
+  );
 }
 
 export async function sendReminders(entryIds: { id: string }[]): Promise<void> {
@@ -54,22 +68,25 @@ export async function sendReminders(entryIds: { id: string }[]): Promise<void> {
     if (students.length === 0) continue;
 
     const dayLabel = DAY_LABELS[entry.slot.dayOfWeek] ?? "Unknown";
-    const emails = students.map((s) => ({
-      from: "LAT System <noreply@lasu.edu.ng>",
-      to: s.email,
-      subject: `Reminder: ${entry.course.code} starts in 30 minutes`,
-      html: reminderEmailHtml({
-        studentName: s.name,
-        courseCode: entry.course.code,
-        courseName: entry.course.title,
-        venueName: entry.venue.name,
-        lecturerName: entry.lecturer.name,
-        startTime: entry.slot.startTime,
-        day: dayLabel,
-      }),
-    }));
 
-    await mailer.batch.send(emails).catch(console.error);
+    await Promise.allSettled(
+      students.map((s) =>
+        mailer.sendMail({
+          from: FROM,
+          to: s.email,
+          subject: `Reminder: ${entry.course.code} starts in 30 minutes`,
+          html: reminderEmailHtml({
+            studentName: s.name,
+            courseCode: entry.course.code,
+            courseName: entry.course.title,
+            venueName: entry.venue.name,
+            lecturerName: entry.lecturer.name,
+            startTime: entry.slot.startTime,
+            day: dayLabel,
+          }),
+        })
+      )
+    );
 
     await db.timetableEntry.update({
       where: { id: entry.id },
