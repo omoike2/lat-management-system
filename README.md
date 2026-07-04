@@ -39,10 +39,10 @@ cp .env.example .env.local
 ```
 
 ```env
-DATABASE_URL=postgresql://...
+DATABASE_URL=postgresql://...pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1
 NEXTAUTH_SECRET=generate-with-openssl-rand-base64-32
-NEXTAUTH_URL=http://localhost:3000
-RESEND_API_KEY=re_...
+GMAIL_USER=youraccount@gmail.com
+GMAIL_APP_PASSWORD=xxxx-xxxx-xxxx-xxxx
 ADMIN_EMAIL=admin@lasu.edu.ng
 ADMIN_PASSWORD_HASH=          # bcrypt hash of admin password
 CRON_SECRET=                  # random string, validates /api/cron/notify
