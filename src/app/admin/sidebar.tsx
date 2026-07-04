@@ -21,11 +21,16 @@ const NAV_ITEMS = [
   { href: "/admin/timetable", label: "Timetable", icon: CalendarDays },
 ] as const;
 
-export default function AdminSidebar({ email }: { email: string }) {
+interface AdminSidebarProps {
+  email: string;
+  onNavClick?: () => void;
+}
+
+export default function AdminSidebar({ email, onNavClick }: AdminSidebarProps) {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 bg-white border-r border-[--color-border] h-screen fixed top-0 left-0 flex flex-col">
+    <aside className="w-64 bg-white border-r border-[--color-border] h-screen flex flex-col">
       <div className="h-16 flex items-center px-6 border-b border-[--color-border]">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-[--color-brand] flex items-center justify-center">
@@ -42,6 +47,7 @@ export default function AdminSidebar({ email }: { email: string }) {
             <Link
               key={href}
               href={href}
+              onClick={onNavClick}
               className={cn(
                 "flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-colors",
                 active
