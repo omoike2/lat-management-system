@@ -47,7 +47,7 @@ export function ConflictForm({ course, slots, venues, lecturers, semester }: Con
             required
             value={slotId}
             onChange={(e) => setSlotId(e.target.value)}
-            className="w-full h-8 rounded-md border border-gray-300 px-2 text-xs focus:border-[#006633] outline-none"
+            className="w-full h-8 rounded-md border border-gray-300 px-2 text-xs focus:border-(--color-brand) outline-none"
           >
             <option value="">Select slot…</option>
             {availableSlots.map((s) => (
@@ -64,7 +64,7 @@ export function ConflictForm({ course, slots, venues, lecturers, semester }: Con
             required
             value={venueId}
             onChange={(e) => setVenueId(e.target.value)}
-            className="w-full h-8 rounded-md border border-gray-300 px-2 text-xs focus:border-[#006633] outline-none"
+            className="w-full h-8 rounded-md border border-gray-300 px-2 text-xs focus:border-(--color-brand) outline-none"
           >
             <option value="">Select venue…</option>
             {venues.map((v) => (
@@ -81,7 +81,7 @@ export function ConflictForm({ course, slots, venues, lecturers, semester }: Con
             required
             value={lecturerId}
             onChange={(e) => setLecturerId(e.target.value)}
-            className="w-full h-8 rounded-md border border-gray-300 px-2 text-xs focus:border-[#006633] outline-none"
+            className="w-full h-8 rounded-md border border-gray-300 px-2 text-xs focus:border-(--color-brand) outline-none"
           >
             <option value="">Select lecturer…</option>
             {lecturers.map((l) => (
@@ -97,7 +97,7 @@ export function ConflictForm({ course, slots, venues, lecturers, semester }: Con
         <button
           type="submit"
           disabled={isPending || !slotId || !venueId || !lecturerId}
-          className="h-8 px-3 rounded-md bg-[#006633] text-white text-xs font-medium hover:bg-[#005229] disabled:opacity-50 transition-colors"
+          className="h-8 px-3 rounded-md bg-(--color-brand) text-white text-xs font-medium hover:bg-(--color-brand-hover) disabled:opacity-50 transition-colors"
         >
           {isPending ? "Assigning…" : "Assign slot"}
         </button>

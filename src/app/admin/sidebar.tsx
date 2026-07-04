@@ -30,13 +30,16 @@ export default function AdminSidebar({ email, onNavClick }: AdminSidebarProps) {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 bg-white border-r border-[--color-border] h-screen flex flex-col">
-      <div className="h-16 flex items-center px-6 border-b border-[--color-border]">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-[--color-brand] flex items-center justify-center">
-            <span className="text-white text-sm font-bold">L</span>
+    <aside className="w-64 bg-white border-r border-(--color-border) h-screen flex flex-col">
+      <div className="h-16 flex items-center px-5 bg-(--color-brand)">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-white/15 border border-white/25 flex items-center justify-center flex-shrink-0">
+            <span className="text-white text-sm font-bold leading-none">L</span>
           </div>
-          <span className="font-semibold text-[--color-text-primary]">LAT System</span>
+          <div>
+            <p className="font-semibold text-white text-sm leading-tight">LAT System</p>
+            <p className="text-white/60 text-[10px] leading-tight uppercase tracking-wide">Timetable</p>
+          </div>
         </div>
       </div>
 
@@ -49,24 +52,27 @@ export default function AdminSidebar({ email, onNavClick }: AdminSidebarProps) {
               href={href}
               onClick={onNavClick}
               className={cn(
-                "flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-colors",
+                "flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-colors relative",
                 active
-                  ? "bg-[--color-brand-light] text-[--color-brand] font-medium"
-                  : "text-[--color-text-secondary] hover:bg-[--color-brand-subtle] hover:text-[--color-text-primary]"
+                  ? "bg-(--color-brand-light) text-(--color-brand) font-semibold"
+                  : "text-(--color-text-secondary) hover:bg-(--color-brand-subtle) hover:text-(--color-text-primary)"
               )}
             >
-              <Icon size={18} />
+              {active && (
+                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-(--color-brand) rounded-r-full" />
+              )}
+              <Icon size={17} />
               {label}
             </Link>
           );
         })}
       </nav>
 
-      <div className="px-3 py-4 border-t border-[--color-border]">
-        <div className="px-4 py-2 text-xs text-[--color-text-muted] truncate mb-1">{email}</div>
+      <div className="px-3 py-4 border-t border-(--color-border)">
+        <div className="px-4 py-2 text-xs text-(--color-text-muted) truncate mb-1">{email}</div>
         <button
           onClick={() => signOut({ callbackUrl: "/login" })}
-          className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-[--color-text-secondary] hover:bg-[--color-brand-subtle] hover:text-[--color-text-primary] transition-colors"
+          className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-(--color-text-secondary) hover:bg-(--color-brand-subtle) hover:text-(--color-text-primary) transition-colors"
         >
           <LogOut size={18} />
           Sign out

@@ -33,7 +33,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
       {/* Left panel — brand */}
-      <div className="hidden lg:flex flex-col justify-between bg-[#006633] px-12 py-14 text-white relative overflow-hidden">
+      <div className="hidden lg:flex flex-col justify-between bg-(--color-brand) px-12 py-14 text-white relative overflow-hidden">
         <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-white/5" />
         <div className="absolute -bottom-32 -right-16 w-[28rem] h-[28rem] rounded-full bg-white/5" />
         <div className="absolute top-1/2 right-8 w-48 h-48 rounded-full bg-white/[0.03]" />
@@ -82,7 +82,7 @@ export default function LoginPage() {
       <div className="flex flex-col justify-center px-6 sm:px-12 lg:px-16 py-14 bg-white">
         {/* Mobile logo */}
         <div className="lg:hidden flex items-center gap-3 mb-10">
-          <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-[#006633]">
+          <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-(--color-brand)">
             <span className="font-bold text-white text-base leading-none">L</span>
           </div>
           <span className="text-sm font-semibold text-gray-600 tracking-wide uppercase">
@@ -108,7 +108,7 @@ export default function LoginPage() {
                 required
                 autoComplete="email"
                 placeholder="admin@lasu.edu.ng"
-                className="w-full h-10 rounded-md border border-gray-300 px-3 text-sm placeholder:text-gray-400 focus:border-[#006633] focus:ring-2 focus:ring-[#006633]/20 outline-none transition"
+                className="w-full h-10 rounded-md border border-gray-300 px-3 text-sm placeholder:text-gray-400 focus:border-(--color-brand) focus:ring-2 focus:ring-(--color-brand)/20 outline-none transition"
               />
             </div>
 
@@ -123,7 +123,7 @@ export default function LoginPage() {
                 required
                 autoComplete="current-password"
                 placeholder="••••••••"
-                className="w-full h-10 rounded-md border border-gray-300 px-3 text-sm placeholder:text-gray-400 focus:border-[#006633] focus:ring-2 focus:ring-[#006633]/20 outline-none transition"
+                className="w-full h-10 rounded-md border border-gray-300 px-3 text-sm placeholder:text-gray-400 focus:border-(--color-brand) focus:ring-2 focus:ring-(--color-brand)/20 outline-none transition"
               />
             </div>
 
@@ -137,7 +137,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isPending}
-              className="w-full h-10 rounded-md bg-[#006633] text-white text-sm font-medium hover:bg-[#005229] disabled:opacity-60 transition-colors mt-1"
+              className="w-full h-10 rounded-md bg-(--color-brand) text-white text-sm font-medium hover:bg-(--color-brand-hover) disabled:opacity-60 transition-colors mt-1"
             >
               {isPending ? "Signing in…" : "Sign in"}
             </button>

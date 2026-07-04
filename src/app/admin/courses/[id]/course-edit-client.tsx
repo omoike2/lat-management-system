@@ -63,51 +63,51 @@ export default function CourseEditClient({ course, allLecturers }: Props) {
     <div>
       <button
         onClick={() => router.push("/admin/courses")}
-        className="flex items-center gap-2 text-sm text-[--color-text-secondary] hover:text-[--color-text-primary] mb-6 transition-colors"
+        className="flex items-center gap-2 text-sm text-(--color-text-secondary) hover:text-(--color-text-primary) mb-6 transition-colors"
       >
         <ArrowLeft size={16} /> Courses
       </button>
 
-      <h1 className="text-2xl font-semibold text-[--color-text-primary] mb-1">{course.code}</h1>
-      <p className="text-sm text-[--color-text-secondary] mb-6">{course.title}</p>
+      <h1 className="text-2xl font-semibold text-(--color-text-primary) mb-1">{course.code}</h1>
+      <p className="text-sm text-(--color-text-secondary) mb-6">{course.title}</p>
 
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Edit form */}
-        <div className="bg-white rounded-lg border border-[--color-border] shadow-sm p-6">
-          <h2 className="text-lg font-semibold text-[--color-text-primary] mb-4">Details</h2>
+        <div className="bg-white rounded-lg border border-(--color-border) shadow-sm p-6">
+          <h2 className="text-lg font-semibold text-(--color-text-primary) mb-4">Details</h2>
           <form onSubmit={handleUpdate} className="space-y-4">
             <FormField id="code" label="Course code" required>
-              <input id="code" name="code" defaultValue={course.code} required className="w-full h-9 rounded-md border border-[--color-border] px-3 text-sm focus:border-[--color-brand] focus:ring-1 focus:ring-[--color-brand] outline-none" />
+              <input id="code" name="code" defaultValue={course.code} required className="w-full h-9 rounded-md border border-(--color-border) px-3 text-sm focus:border-(--color-brand) focus:ring-1 focus:ring-(--color-brand) outline-none" />
             </FormField>
             <FormField id="title" label="Title" required>
-              <input id="title" name="title" defaultValue={course.title} required className="w-full h-9 rounded-md border border-[--color-border] px-3 text-sm focus:border-[--color-brand] focus:ring-1 focus:ring-[--color-brand] outline-none" />
+              <input id="title" name="title" defaultValue={course.title} required className="w-full h-9 rounded-md border border-(--color-border) px-3 text-sm focus:border-(--color-brand) focus:ring-1 focus:ring-(--color-brand) outline-none" />
             </FormField>
             <FormField id="department" label="Department" required>
-              <select id="department" name="department" defaultValue={course.department} required className="w-full h-9 rounded-md border border-[--color-border] px-3 text-sm focus:border-[--color-brand] focus:ring-1 focus:ring-[--color-brand] outline-none bg-white">
+              <select id="department" name="department" defaultValue={course.department} required className="w-full h-9 rounded-md border border-(--color-border) px-3 text-sm focus:border-(--color-brand) focus:ring-1 focus:ring-(--color-brand) outline-none bg-white">
                 {DEPARTMENTS.map((d) => <option key={d} value={d}>{d}</option>)}
               </select>
             </FormField>
             <FormField id="level" label="Level" required>
-              <select id="level" name="level" defaultValue={course.level} required className="w-full h-9 rounded-md border border-[--color-border] px-3 text-sm focus:border-[--color-brand] focus:ring-1 focus:ring-[--color-brand] outline-none bg-white">
+              <select id="level" name="level" defaultValue={course.level} required className="w-full h-9 rounded-md border border-(--color-border) px-3 text-sm focus:border-(--color-brand) focus:ring-1 focus:ring-(--color-brand) outline-none bg-white">
                 {LEVELS.map((l) => <option key={l} value={l}>{l}</option>)}
               </select>
             </FormField>
             <div className="grid grid-cols-2 gap-4">
               <FormField id="units" label="Units" required>
-                <input id="units" name="units" type="number" min={1} max={6} defaultValue={course.units} required className="w-full h-9 rounded-md border border-[--color-border] px-3 text-sm focus:border-[--color-brand] focus:ring-1 focus:ring-[--color-brand] outline-none" />
+                <input id="units" name="units" type="number" min={1} max={6} defaultValue={course.units} required className="w-full h-9 rounded-md border border-(--color-border) px-3 text-sm focus:border-(--color-brand) focus:ring-1 focus:ring-(--color-brand) outline-none" />
               </FormField>
               <FormField id="weeklyFreq" label="Weekly freq">
-                <input id="weeklyFreq" name="weeklyFreq" type="number" min={1} max={5} defaultValue={course.weeklyFreq} className="w-full h-9 rounded-md border border-[--color-border] px-3 text-sm focus:border-[--color-brand] focus:ring-1 focus:ring-[--color-brand] outline-none" />
+                <input id="weeklyFreq" name="weeklyFreq" type="number" min={1} max={5} defaultValue={course.weeklyFreq} className="w-full h-9 rounded-md border border-(--color-border) px-3 text-sm focus:border-(--color-brand) focus:ring-1 focus:ring-(--color-brand) outline-none" />
               </FormField>
             </div>
 
-            {error && <p className="text-xs text-[--color-danger]">{error}</p>}
-            {success && <p className="text-xs text-[--color-success]">Saved.</p>}
+            {error && <p className="text-xs text-(--color-danger)">{error}</p>}
+            {success && <p className="text-xs text-(--color-success)">Saved.</p>}
 
             <button
               type="submit"
               disabled={isPending}
-              className="h-9 px-4 rounded-md bg-[--color-brand] text-white text-sm font-medium hover:bg-[--color-brand-hover] disabled:opacity-60 transition-colors"
+              className="h-9 px-4 rounded-md bg-(--color-brand) text-white text-sm font-medium hover:bg-(--color-brand-hover) disabled:opacity-60 transition-colors"
             >
               {isPending ? "Saving…" : "Save changes"}
             </button>
@@ -115,23 +115,23 @@ export default function CourseEditClient({ course, allLecturers }: Props) {
         </div>
 
         {/* Lecturer assignment */}
-        <div className="bg-white rounded-lg border border-[--color-border] shadow-sm p-6">
-          <h2 className="text-lg font-semibold text-[--color-text-primary] mb-4">Lecturers</h2>
+        <div className="bg-white rounded-lg border border-(--color-border) shadow-sm p-6">
+          <h2 className="text-lg font-semibold text-(--color-text-primary) mb-4">Lecturers</h2>
 
           {course.lecturers.length === 0 ? (
-            <p className="text-sm text-[--color-text-muted] mb-4">No lecturers assigned.</p>
+            <p className="text-sm text-(--color-text-muted) mb-4">No lecturers assigned.</p>
           ) : (
             <ul className="space-y-2 mb-4">
               {course.lecturers.map(({ lecturer }) => (
                 <li key={lecturer.id} className="flex items-center justify-between text-sm">
                   <div>
-                    <span className="font-medium text-[--color-text-primary]">{lecturer.name}</span>
-                    <span className="text-[--color-text-muted] ml-2">{lecturer.email}</span>
+                    <span className="font-medium text-(--color-text-primary)">{lecturer.name}</span>
+                    <span className="text-(--color-text-muted) ml-2">{lecturer.email}</span>
                   </div>
                   <button
                     onClick={() => handleUnassign(lecturer.id)}
                     disabled={isPending}
-                    className="h-7 w-7 rounded-md flex items-center justify-center text-[--color-text-muted] hover:bg-[--color-danger-light] hover:text-[--color-danger] transition-colors"
+                    className="h-7 w-7 rounded-md flex items-center justify-center text-(--color-text-muted) hover:bg-(--color-danger-light) hover:text-(--color-danger) transition-colors"
                   >
                     <Trash2 size={13} />
                   </button>
@@ -142,10 +142,10 @@ export default function CourseEditClient({ course, allLecturers }: Props) {
 
           {unassigned.length > 0 && (
             <div>
-              <p className="text-[13px] font-medium text-[--color-text-secondary] mb-2">Assign lecturer</p>
+              <p className="text-[13px] font-medium text-(--color-text-secondary) mb-2">Assign lecturer</p>
               <select
                 onChange={(e) => { if (e.target.value) handleAssign(e.target.value); e.target.value = ""; }}
-                className="w-full h-9 rounded-md border border-[--color-border] px-3 text-sm focus:border-[--color-brand] focus:ring-1 focus:ring-[--color-brand] outline-none bg-white"
+                className="w-full h-9 rounded-md border border-(--color-border) px-3 text-sm focus:border-(--color-brand) focus:ring-1 focus:ring-(--color-brand) outline-none bg-white"
               >
                 <option value="">Select lecturer…</option>
                 {unassigned.map((l) => (
@@ -156,7 +156,7 @@ export default function CourseEditClient({ course, allLecturers }: Props) {
           )}
 
           {unassigned.length === 0 && course.lecturers.length > 0 && (
-            <p className="text-xs text-[--color-text-muted]">All lecturers assigned.</p>
+            <p className="text-xs text-(--color-text-muted)">All lecturers assigned.</p>
           )}
         </div>
       </div>

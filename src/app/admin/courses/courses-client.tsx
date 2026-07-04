@@ -70,13 +70,13 @@ export default function CoursesClient({ courses }: Props) {
         <div className="flex items-center gap-1 justify-end">
           <button
             onClick={() => router.push(`/admin/courses/${r.id}`)}
-            className="h-8 w-8 rounded-md flex items-center justify-center text-[--color-text-muted] hover:bg-[--color-bg] transition-colors"
+            className="h-8 w-8 rounded-md flex items-center justify-center text-(--color-text-muted) hover:bg-(--color-bg) transition-colors"
           >
             <Pencil size={14} />
           </button>
           <button
             onClick={() => handleDelete(r.id, r.code)}
-            className="h-8 w-8 rounded-md flex items-center justify-center text-[--color-text-muted] hover:bg-[--color-danger-light] hover:text-[--color-danger] transition-colors"
+            className="h-8 w-8 rounded-md flex items-center justify-center text-(--color-text-muted) hover:bg-(--color-danger-light) hover:text-(--color-danger) transition-colors"
           >
             <Trash2 size={14} />
           </button>
@@ -89,12 +89,12 @@ export default function CoursesClient({ courses }: Props) {
     <div>
       <div className="flex items-start justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-semibold text-[--color-text-primary]">Courses</h1>
-          <p className="text-sm text-[--color-text-secondary] mt-1">{courses.length} total</p>
+          <h1 className="text-2xl font-semibold text-(--color-text-primary)">Courses</h1>
+          <p className="text-sm text-(--color-text-secondary) mt-1">{courses.length} total</p>
         </div>
         <button
           onClick={() => setOpen(true)}
-          className="flex items-center gap-2 h-9 px-4 rounded-md bg-[--color-brand] text-white text-sm font-medium hover:bg-[--color-brand-hover] transition-colors"
+          className="flex items-center gap-2 h-9 px-4 rounded-md bg-(--color-brand) text-white text-sm font-medium hover:bg-(--color-brand-hover) transition-colors"
         >
           <Plus size={16} /> Add course
         </button>
@@ -117,7 +117,7 @@ export default function CoursesClient({ courses }: Props) {
             <button
               type="button"
               onClick={() => { setOpen(false); setError(null); }}
-              className="h-9 px-4 rounded-md border border-[--color-border] text-sm font-medium text-[--color-text-primary] hover:bg-[--color-bg] transition-colors"
+              className="h-9 px-4 rounded-md border border-(--color-border) text-sm font-medium text-(--color-text-primary) hover:bg-(--color-bg) transition-colors"
             >
               Cancel
             </button>
@@ -125,7 +125,7 @@ export default function CoursesClient({ courses }: Props) {
               form="course-form"
               type="submit"
               disabled={isPending}
-              className="h-9 px-4 rounded-md bg-[--color-brand] text-white text-sm font-medium hover:bg-[--color-brand-hover] disabled:opacity-60 transition-colors"
+              className="h-9 px-4 rounded-md bg-(--color-brand) text-white text-sm font-medium hover:bg-(--color-brand-hover) disabled:opacity-60 transition-colors"
             >
               {isPending ? "Creating…" : "Create"}
             </button>
@@ -134,22 +134,22 @@ export default function CoursesClient({ courses }: Props) {
       >
         <form id="course-form" onSubmit={handleSubmit} className="space-y-4">
           <FormField id="code" label="Course code" required>
-            <input id="code" name="code" required placeholder="e.g. CSC 201" className="w-full h-9 rounded-md border border-[--color-border] px-3 text-sm focus:border-[--color-brand] focus:ring-1 focus:ring-[--color-brand] outline-none" />
+            <input id="code" name="code" required placeholder="e.g. CSC 201" className="w-full h-9 rounded-md border border-(--color-border) px-3 text-sm focus:border-(--color-brand) focus:ring-1 focus:ring-(--color-brand) outline-none" />
           </FormField>
 
           <FormField id="title" label="Title" required>
-            <input id="title" name="title" required className="w-full h-9 rounded-md border border-[--color-border] px-3 text-sm focus:border-[--color-brand] focus:ring-1 focus:ring-[--color-brand] outline-none" />
+            <input id="title" name="title" required className="w-full h-9 rounded-md border border-(--color-border) px-3 text-sm focus:border-(--color-brand) focus:ring-1 focus:ring-(--color-brand) outline-none" />
           </FormField>
 
           <FormField id="department" label="Department" required>
-            <select id="department" name="department" required className="w-full h-9 rounded-md border border-[--color-border] px-3 text-sm focus:border-[--color-brand] focus:ring-1 focus:ring-[--color-brand] outline-none bg-white">
+            <select id="department" name="department" required className="w-full h-9 rounded-md border border-(--color-border) px-3 text-sm focus:border-(--color-brand) focus:ring-1 focus:ring-(--color-brand) outline-none bg-white">
               <option value="">Select…</option>
               {DEPARTMENTS.map((d) => <option key={d} value={d}>{d}</option>)}
             </select>
           </FormField>
 
           <FormField id="level" label="Level" required>
-            <select id="level" name="level" required className="w-full h-9 rounded-md border border-[--color-border] px-3 text-sm focus:border-[--color-brand] focus:ring-1 focus:ring-[--color-brand] outline-none bg-white">
+            <select id="level" name="level" required className="w-full h-9 rounded-md border border-(--color-border) px-3 text-sm focus:border-(--color-brand) focus:ring-1 focus:ring-(--color-brand) outline-none bg-white">
               <option value="">Select…</option>
               {LEVELS.map((l) => <option key={l} value={l}>{l}</option>)}
             </select>
@@ -157,14 +157,14 @@ export default function CoursesClient({ courses }: Props) {
 
           <div className="grid grid-cols-2 gap-4">
             <FormField id="units" label="Units" required>
-              <input id="units" name="units" type="number" min={1} max={6} defaultValue={3} required className="w-full h-9 rounded-md border border-[--color-border] px-3 text-sm focus:border-[--color-brand] focus:ring-1 focus:ring-[--color-brand] outline-none" />
+              <input id="units" name="units" type="number" min={1} max={6} defaultValue={3} required className="w-full h-9 rounded-md border border-(--color-border) px-3 text-sm focus:border-(--color-brand) focus:ring-1 focus:ring-(--color-brand) outline-none" />
             </FormField>
             <FormField id="weeklyFreq" label="Weekly freq">
-              <input id="weeklyFreq" name="weeklyFreq" type="number" min={1} max={5} defaultValue={2} className="w-full h-9 rounded-md border border-[--color-border] px-3 text-sm focus:border-[--color-brand] focus:ring-1 focus:ring-[--color-brand] outline-none" />
+              <input id="weeklyFreq" name="weeklyFreq" type="number" min={1} max={5} defaultValue={2} className="w-full h-9 rounded-md border border-(--color-border) px-3 text-sm focus:border-(--color-brand) focus:ring-1 focus:ring-(--color-brand) outline-none" />
             </FormField>
           </div>
 
-          {error && <p className="text-xs text-[--color-danger]">{error}</p>}
+          {error && <p className="text-xs text-(--color-danger)">{error}</p>}
         </form>
       </SlideOver>
     </div>

@@ -59,7 +59,7 @@ export function TimetableClient({ initialEntries, initialSlots, initialSemester 
             <select
               value={semester}
               onChange={(e) => setSemester(e.target.value)}
-              className="h-9 rounded-md border border-gray-300 pl-3 pr-8 text-sm text-gray-700 focus:border-[#006633] focus:ring-2 focus:ring-[#006633]/20 outline-none appearance-none bg-white"
+              className="h-9 rounded-md border border-gray-300 pl-3 pr-8 text-sm text-gray-700 focus:border-(--color-brand) focus:ring-2 focus:ring-(--color-brand)/20 outline-none appearance-none bg-white"
             >
               {SEMESTERS.map((s) => (
                 <option key={s} value={s}>
@@ -75,7 +75,7 @@ export function TimetableClient({ initialEntries, initialSlots, initialSemester 
         <button
           onClick={handleGenerate}
           disabled={isPending}
-          className="inline-flex items-center gap-2 h-9 px-4 rounded-md bg-[#006633] text-white text-sm font-medium hover:bg-[#005229] disabled:opacity-60 transition-colors"
+          className="inline-flex items-center gap-2 h-9 px-4 rounded-md bg-(--color-brand) text-white text-sm font-medium hover:bg-(--color-brand-hover) disabled:opacity-60 transition-colors"
         >
           {isPending ? (
             <Loader2 className="w-4 h-4 animate-spin" />

@@ -22,8 +22,8 @@ export default async function ConflictsPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-[--color-text-primary]">Conflict Resolution</h1>
-        <p className="text-sm text-[--color-text-secondary] mt-1">
+        <h1 className="text-2xl font-semibold text-(--color-text-primary)">Conflict Resolution</h1>
+        <p className="text-sm text-(--color-text-secondary) mt-1">
           Manually assign slots for courses that could not be automatically scheduled
         </p>
       </div>

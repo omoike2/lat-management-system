@@ -34,16 +34,16 @@ export default async function StudentTimetablePage({ searchParams }: StudentTime
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Student info card */}
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4 mb-6 flex flex-wrap items-center gap-4">
+      <div className="bg-(--color-brand) rounded-xl p-4 mb-6 flex flex-wrap items-center gap-4">
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-gray-900">{student.name}</p>
-          <p className="text-xs text-gray-500 mt-0.5">
+          <p className="text-sm font-semibold text-white">{student.name}</p>
+          <p className="text-xs text-white/60 mt-0.5">
             {student.department} · Level {student.level}
           </p>
         </div>
         <a
           href="/student/register"
-          className="text-xs text-gray-400 hover:text-gray-600 underline underline-offset-2"
+          className="text-xs text-white/50 hover:text-white/80 underline underline-offset-2 transition-colors"
         >
           Switch account
         </a>
@@ -61,7 +61,7 @@ export default async function StudentTimetablePage({ searchParams }: StudentTime
           <select
             name="semester"
             defaultValue={semester}
-            className="h-9 rounded-md border border-gray-300 px-3 text-sm focus:border-[#006633] focus:ring-2 focus:ring-[#006633]/20 outline-none bg-white"
+            className="h-9 rounded-md border border-gray-300 px-3 text-sm focus:border-(--color-brand) focus:ring-2 focus:ring-(--color-brand)/20 outline-none bg-white"
           >
             {SEMESTERS.map((s) => (
               <option key={s} value={s}>
@@ -71,7 +71,7 @@ export default async function StudentTimetablePage({ searchParams }: StudentTime
           </select>
           <button
             type="submit"
-            className="h-9 px-3 rounded-md bg-[#006633] text-white text-sm font-medium hover:bg-[#005229] transition-colors"
+            className="h-9 px-3 rounded-md bg-(--color-brand) text-white text-sm font-medium hover:bg-(--color-brand-hover) transition-colors"
           >
             Go
           </button>

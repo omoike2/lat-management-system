@@ -52,10 +52,10 @@ export default function LecturersClient({ lecturers }: Props) {
       header: "",
       cell: (r) => (
         <div className="flex items-center gap-1 justify-end">
-          <button onClick={() => router.push(`/admin/lecturers/${r.id}`)} className="h-8 w-8 rounded-md flex items-center justify-center text-[--color-text-muted] hover:bg-[--color-bg] transition-colors">
+          <button onClick={() => router.push(`/admin/lecturers/${r.id}`)} className="h-8 w-8 rounded-md flex items-center justify-center text-(--color-text-muted) hover:bg-(--color-bg) transition-colors">
             <Pencil size={14} />
           </button>
-          <button onClick={() => handleDelete(r.id, r.name)} className="h-8 w-8 rounded-md flex items-center justify-center text-[--color-text-muted] hover:bg-[--color-danger-light] hover:text-[--color-danger] transition-colors">
+          <button onClick={() => handleDelete(r.id, r.name)} className="h-8 w-8 rounded-md flex items-center justify-center text-(--color-text-muted) hover:bg-(--color-danger-light) hover:text-(--color-danger) transition-colors">
             <Trash2 size={14} />
           </button>
         </div>
@@ -67,10 +67,10 @@ export default function LecturersClient({ lecturers }: Props) {
     <div>
       <div className="flex items-start justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-semibold text-[--color-text-primary]">Lecturers</h1>
-          <p className="text-sm text-[--color-text-secondary] mt-1">{lecturers.length} total</p>
+          <h1 className="text-2xl font-semibold text-(--color-text-primary)">Lecturers</h1>
+          <p className="text-sm text-(--color-text-secondary) mt-1">{lecturers.length} total</p>
         </div>
-        <button onClick={() => setOpen(true)} className="flex items-center gap-2 h-9 px-4 rounded-md bg-[--color-brand] text-white text-sm font-medium hover:bg-[--color-brand-hover] transition-colors">
+        <button onClick={() => setOpen(true)} className="flex items-center gap-2 h-9 px-4 rounded-md bg-(--color-brand) text-white text-sm font-medium hover:bg-(--color-brand-hover) transition-colors">
           <Plus size={16} /> Add lecturer
         </button>
       </div>
@@ -83,22 +83,22 @@ export default function LecturersClient({ lecturers }: Props) {
         title="Add lecturer"
         footer={
           <>
-            <button type="button" onClick={() => { setOpen(false); setError(null); }} className="h-9 px-4 rounded-md border border-[--color-border] text-sm font-medium text-[--color-text-primary] hover:bg-[--color-bg] transition-colors">Cancel</button>
-            <button form="lecturer-form" type="submit" disabled={isPending} className="h-9 px-4 rounded-md bg-[--color-brand] text-white text-sm font-medium hover:bg-[--color-brand-hover] disabled:opacity-60 transition-colors">{isPending ? "Creating…" : "Create"}</button>
+            <button type="button" onClick={() => { setOpen(false); setError(null); }} className="h-9 px-4 rounded-md border border-(--color-border) text-sm font-medium text-(--color-text-primary) hover:bg-(--color-bg) transition-colors">Cancel</button>
+            <button form="lecturer-form" type="submit" disabled={isPending} className="h-9 px-4 rounded-md bg-(--color-brand) text-white text-sm font-medium hover:bg-(--color-brand-hover) disabled:opacity-60 transition-colors">{isPending ? "Creating…" : "Create"}</button>
           </>
         }
       >
         <form id="lecturer-form" onSubmit={handleSubmit} className="space-y-4">
           <FormField id="name" label="Name" required>
-            <input id="name" name="name" required className="w-full h-9 rounded-md border border-[--color-border] px-3 text-sm focus:border-[--color-brand] focus:ring-1 focus:ring-[--color-brand] outline-none" />
+            <input id="name" name="name" required className="w-full h-9 rounded-md border border-(--color-border) px-3 text-sm focus:border-(--color-brand) focus:ring-1 focus:ring-(--color-brand) outline-none" />
           </FormField>
           <FormField id="email" label="Email" required>
-            <input id="email" name="email" type="email" required className="w-full h-9 rounded-md border border-[--color-border] px-3 text-sm focus:border-[--color-brand] focus:ring-1 focus:ring-[--color-brand] outline-none" />
+            <input id="email" name="email" type="email" required className="w-full h-9 rounded-md border border-(--color-border) px-3 text-sm focus:border-(--color-brand) focus:ring-1 focus:ring-(--color-brand) outline-none" />
           </FormField>
           <FormField id="department" label="Department">
-            <input id="department" name="department" placeholder="Optional" className="w-full h-9 rounded-md border border-[--color-border] px-3 text-sm focus:border-[--color-brand] focus:ring-1 focus:ring-[--color-brand] outline-none" />
+            <input id="department" name="department" placeholder="Optional" className="w-full h-9 rounded-md border border-(--color-border) px-3 text-sm focus:border-(--color-brand) focus:ring-1 focus:ring-(--color-brand) outline-none" />
           </FormField>
-          {error && <p className="text-xs text-[--color-danger]">{error}</p>}
+          {error && <p className="text-xs text-(--color-danger)">{error}</p>}
         </form>
       </SlideOver>
     </div>
