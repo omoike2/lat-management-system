@@ -32,8 +32,7 @@ export function RegisterForm({ departments }: RegisterFormProps) {
         return;
       }
 
-      const matric = result.data?.matric ?? "";
-      document.cookie = `studentMatric=${encodeURIComponent(matric)}; path=/student; max-age=${60 * 60 * 24 * 365}`;
+      // Cookie is set server-side (httpOnly) — just redirect
       router.push("/student/timetable");
       router.refresh();
     });

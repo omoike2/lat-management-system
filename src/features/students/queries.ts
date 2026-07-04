@@ -5,6 +5,10 @@ export async function getStudentByMatric(matric: string): Promise<Student | null
   return db.student.findUnique({ where: { matric } });
 }
 
+export async function getStudentById(id: string): Promise<Student | null> {
+  return db.student.findUnique({ where: { id } });
+}
+
 export async function listDepartmentsForStudent(): Promise<string[]> {
   const rows = await db.course.findMany({
     select: { department: true },

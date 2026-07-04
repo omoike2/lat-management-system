@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { getStudentByMatric } from "@/features/students/queries";
+import { getStudentById } from "@/features/students/queries";
 import { getStudentTimetableEntries, getTimeSlots } from "@/features/timetable/queries";
 import { TimetableGrid } from "@/components/timetable-grid";
 import { StudentScheduleList } from "@/components/student-schedule-list";
@@ -16,11 +16,11 @@ export const metadata = { title: "My Timetable | LAT" };
 
 export default async function StudentTimetablePage({ searchParams }: StudentTimetablePageProps) {
   const cookieStore = await cookies();
-  const matric = cookieStore.get("studentMatric")?.value;
+  const studentId = cookieStore.get("studentId")?.value;
 
-  if (!matric) redirect("/student/register");
+  if (!studentId) redirect("/student/register");
 
-  const student = await getStudentByMatric(decodeURIComponent(matric));
+  const student = await getStudentById(studentId);
   if (!student) redirect("/student/register");
 
   const { semester: semesterParam } = await searchParams;
@@ -38,7 +38,7 @@ export default async function StudentTimetablePage({ searchParams }: StudentTime
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold text-gray-900">{student.name}</p>
           <p className="text-xs text-gray-500 mt-0.5">
-            {student.matric} · {student.department} · Level {student.level}
+            {student.department} · Level {student.level}
           </p>
         </div>
         <a

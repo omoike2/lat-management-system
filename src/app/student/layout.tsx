@@ -1,10 +1,10 @@
 import { cookies } from "next/headers";
-import { getStudentByMatric } from "@/features/students/queries";
+import { getStudentById } from "@/features/students/queries";
 
 export default async function StudentLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
-  const matric = cookieStore.get("studentMatric")?.value;
-  const student = matric ? await getStudentByMatric(matric) : null;
+  const studentId = cookieStore.get("studentId")?.value;
+  const student = studentId ? await getStudentById(studentId) : null;
 
   return (
     <div className="min-h-screen bg-gray-50">
