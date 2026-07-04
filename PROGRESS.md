@@ -96,15 +96,15 @@ Venues:
 - [x] Verify: build clean, 26 tests pass
 - [x] `pnpm test && pnpm build && pnpm lint` → commit `feat(phase-6): timetable grid and admin UI`
 
-## Phase 7 — Notifications  [ ]
+## Phase 7 — Notifications  [x]
 
-- [ ] `features/notifications/templates.ts` — reminder + change HTML emails
-- [ ] `features/notifications/trigger.ts` — sendChangeNotification, sendReminders
-- [ ] `app/api/cron/notify/route.ts` — CRON_SECRET guard, 25–35min window query, reminderSent flag
-- [ ] `vercel.json` — cron `*/5 * * * *`
-- [ ] Wire change notifications into timetable/actions.ts mutations
-- [ ] Verify: manual POST sends reminder; updateEntry fires change email
-- [ ] `pnpm test && pnpm build && pnpm lint` → commit `feat(phase-7): notifications cron and email triggers`
+- [x] `features/notifications/templates.ts` — reminder + change HTML emails
+- [x] `features/notifications/trigger.ts` — sendChangeNotification, sendReminders
+- [x] `app/api/cron/notify/route.ts` — CRON_SECRET guard, 25–35min window query, reminderSent flag
+- [x] `vercel.json` — cron `*/5 * * * *`
+- [x] Wire change notifications into timetable/actions.ts mutations
+- [x] Verify: manual POST sends reminder; updateEntry fires change email
+- [x] `pnpm test && pnpm build && pnpm lint` → commit `feat(phase-7): notifications cron and email triggers`
 
 ## Phase 8 — Student flow  [ ]
 

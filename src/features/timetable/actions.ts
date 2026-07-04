@@ -8,6 +8,7 @@ import type { ConflictReport } from "./types";
 import { generate } from "./generator";
 import { GenerateSchema, ManualAssignSchema, UpdateEntrySchema } from "./schema";
 import { checkVenueClash, checkLecturerClash, checkGroupClash, type EntryMinimal } from "./constraints";
+import { sendChangeNotification } from "@/features/notifications/trigger";
 
 async function requireAdmin(): Promise<ActionResult | null> {
   const session = await auth();
@@ -102,12 +103,17 @@ export async function updateEntry(raw: unknown): Promise<ActionResult> {
   await db.timetableEntry.update({ where: { id }, data: updates });
   revalidatePath("/admin/timetable");
 
+  sendChangeNotification(id, "time", "Your class time or venue has been updated.").catch(console.error);
+
   return { success: true };
 }
 
 export async function deleteEntry(id: string): Promise<ActionResult> {
   const deny = await requireAdmin();
   if (deny) return deny;
+
+  // Notify before delete so trigger can still fetch the entry
+  sendChangeNotification(id, "cancellation", "This class has been cancelled.").catch(console.error);
 
   await db.timetableEntry.delete({ where: { id } });
   revalidatePath("/admin/timetable");

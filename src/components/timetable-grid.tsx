@@ -93,7 +93,6 @@ export function TimetableGrid({ entries, slots, mode, onCellClick }: TimetableGr
                   const cellEntries = entryMap.get(slot.id) ?? [];
                   // Conflict = two entries in same slot share dept+level
                   const groupKeys = cellEntries.map((e) => `${e.course.department}-${e.course.level}`);
-                  const isConflict = groupKeys.length !== new Set(groupKeys).size;
 
                   if (cellEntries.length === 0) {
                     if (mode === "admin") {
