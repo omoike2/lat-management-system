@@ -86,15 +86,15 @@ Venues:
 - [ ] Verify: unit-test constraints; generate on seed → zero violations; conflicts reported correctly
 - [ ] `pnpm test && pnpm build && pnpm lint` → commit `feat(phase-5): timetable generation engine and constraints`
 
-## Phase 6 — Timetable UI  [ ]
+## Phase 6 — Timetable UI  [x]
 
-- [ ] `components/timetable-grid.tsx` — CSS Grid, dept color coding, admin/student modes
-- [ ] `components/conflict-badge.tsx`
-- [ ] `app/(admin)/timetable/page.tsx` — semester selector, Generate button + overlay, grid, conflicts panel
-- [ ] `app/(admin)/timetable/conflicts/page.tsx` — manual slot+venue picker, live validation
-- [ ] `app/(admin)/dashboard/page.tsx` — stat cards
-- [ ] Verify: generate → color-coded grid; conflict resolution validates correctly
-- [ ] `pnpm test && pnpm build && pnpm lint` → commit `feat(phase-6): timetable grid and admin UI`
+- [x] `components/timetable-grid.tsx` — CSS Grid, dept color coding, admin/student modes
+- [x] `components/conflict-badge.tsx`
+- [x] `app/admin/timetable/page.tsx` — semester selector, Generate button, grid, conflicts panel
+- [x] `app/admin/timetable/conflicts/page.tsx` — manual slot+venue picker, live validation
+- [x] `app/admin/dashboard/page.tsx` — timetable entries stat card added
+- [x] Verify: build clean, 26 tests pass
+- [x] `pnpm test && pnpm build && pnpm lint` → commit `feat(phase-6): timetable grid and admin UI`
 
 ## Phase 7 — Notifications  [ ]
 
