@@ -15,13 +15,13 @@ Last updated: 2026-07-04  ·  Current phase: 1
 - [x] Verify: `pnpm dev` boots default page
 - [x] `pnpm test && pnpm build && pnpm lint` → commit `feat(phase-0): scaffold and tooling`
 
-## Phase 1 — Data layer  [ ]
+## Phase 1 — Data layer  [x]
 
-- [ ] `prisma/schema.prisma` — all models (Course, Lecturer, LecturerCourse, Venue, VenueType, TimeSlot, TimetableEntry, Student, Admin)
-- [ ] `src/lib/db.ts` — Prisma client singleton
-- [ ] `prisma/seed.ts` — admin account, 5 time-slots/day (P3 break), sample data
-- [ ] Verify: `db:push` syncs; `db:seed` populates; `db:studio` shows rows
-- [ ] `pnpm test && pnpm build && pnpm lint` → commit `feat(phase-1): data layer and seed`
+- [x] `prisma/schema.prisma` — all models (Course, Lecturer, LecturerCourse, Venue, VenueType, TimeSlot, TimetableEntry, Student, Admin)
+- [x] `src/lib/db.ts` — Prisma client singleton
+- [x] `prisma/seed.ts` — admin account, 5 time-slots/day (P3 break), sample data
+- [x] Verify: `db:push` syncs; `db:seed` populates; `db:studio` shows rows
+- [x] `pnpm test && pnpm build && pnpm lint` → commit `feat(phase-1): data layer and seed`
 
 ## Phase 2 — Core lib + shared types  [ ]
 
