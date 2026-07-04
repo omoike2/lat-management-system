@@ -105,65 +105,22 @@ Subsequent pushes to `main` trigger automatic deployments.
 
 ## 6. Cron Job
 
-The reminder cron must fire every 5 minutes. **Vercel Hobby plan does not support sub-daily cron schedules** — use one of the options below.
+The reminder handler is at `POST /api/cron/notify`, protected by `Authorization: Bearer <CRON_SECRET>`.
 
-### Option A — Vercel Pro (recommended)
+Vercel Hobby does not support sub-daily cron schedules, so use **cron-job.org** (free, no code required):
 
-Upgrade to Pro, then `vercel.json` works as-is:
+1. Create a free account at [cron-job.org](https://cron-job.org)
+2. Click **Create cronjob**
+3. Fill in:
+   - **URL:** `https://your-deployment.vercel.app/api/cron/notify`
+   - **Request method:** `POST`
+   - **Schedule:** every 5 minutes
+4. Under **Headers**, add:
+   - Name: `Authorization`
+   - Value: `Bearer <your CRON_SECRET value>`
+5. Save and enable
 
-```json
-{
-  "crons": [
-    {
-      "path": "/api/cron/notify",
-      "schedule": "*/5 * * * *"
-    }
-  ]
-}
-```
-
-Vercel sends `Authorization: Bearer <CRON_SECRET>` automatically. Verify under **Settings → Cron Jobs** after deploy.
-
-### Option B — External cron service (Hobby plan)
-
-Use a free external scheduler to POST to the endpoint every 5 minutes. Remove or leave `vercel.json` as-is (Hobby ignores unsupported schedules).
-
-**[cron-job.org](https://cron-job.org)** (free):
-1. Create account → New cronjob
-2. URL: `https://your-deployment.vercel.app/api/cron/notify`
-3. Method: `POST`
-4. Header: `Authorization: Bearer <CRON_SECRET>`
-5. Schedule: every 5 minutes
-
-**[Upstash QStash](https://upstash.com/qstash)** (free tier available):
-```bash
-curl -X POST https://qstash.upstash.io/v2/schedules \
-  -H "Authorization: Bearer <QSTASH_TOKEN>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "destination": "https://your-deployment.vercel.app/api/cron/notify",
-    "cron": "*/5 * * * *",
-    "headers": {"Authorization": "Bearer <CRON_SECRET>"}
-  }'
-```
-
-**GitHub Actions** (free with public repos):
-```yaml
-# .github/workflows/cron.yml
-on:
-  schedule:
-    - cron: '*/5 * * * *'
-jobs:
-  notify:
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
-          curl -X POST ${{ secrets.APP_URL }}/api/cron/notify \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"
-```
-Set `APP_URL` and `CRON_SECRET` in GitHub repo secrets.
-
-**Cron behavior (all options):**
+**Cron behavior:**
 - Fires every 5 minutes
 - Queries entries with `startTime` in the 25–35 minute window from now
 - Sends one email per matched student; sets `reminderSent = true` to prevent duplicates
@@ -237,8 +194,12 @@ createdb lat_dev
 - Check Resend dashboard logs for delivery errors.
 
 **Cron not firing**
-- Check **Settings → Cron Jobs** in Vercel dashboard — cron must be listed.
-- Manually POST to `/api/cron/notify` with the correct `Authorization` header to test the handler independently.
+- Check cron-job.org dashboard — confirm the job is enabled and not erroring.
+- Manually POST to `/api/cron/notify` to test the handler independently:
+  ```bash
+  curl -X POST https://your-deployment.vercel.app/api/cron/notify \
+    -H "Authorization: Bearer <CRON_SECRET>"
+  ```
 
 **`NEXTAUTH_URL` mismatch**
 - Must match the exact deployment URL (no trailing slash). Mismatches cause OAuth redirect errors.

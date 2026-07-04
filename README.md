@@ -145,7 +145,7 @@ Change notifications fire synchronously from `timetable/actions.ts` after any en
 
 See [docs/deployment.md](docs/deployment.md) for the full guide (Supabase, Resend, Vercel, cron setup, post-deploy verification, troubleshooting).
 
-Quick path: set env vars in Vercel dashboard → push to `main` → auto-deploys. `vercel.json` cron is already configured.
+Quick path: set env vars in Vercel dashboard → push to `main` → auto-deploys. Configure the 5-minute reminder cron on cron-job.org (free) as described in the guide.
 
 ---
 
