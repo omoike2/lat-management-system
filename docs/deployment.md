@@ -31,10 +31,27 @@ LAT Management System deploys to **Vercel** (hosting + cron) with **Supabase** (
 
 ## 2. Email — Resend
 
-1. Create an account at [resend.com](https://resend.com).
-2. Add and verify your domain (or use `onboarding@resend.dev` for testing).
-3. Generate an API key under **API Keys** → copy it as `RESEND_API_KEY`.
-4. Update the `from` address in `src/features/notifications/trigger.ts` to match your verified domain.
+> **Important:** The app's hosting domain (`.vercel.app`) does not affect email delivery. What matters is the **FROM address domain** in Resend. Without a verified domain, Resend's shared sender (`onboarding@resend.dev`) can only deliver to the email address used to sign up for Resend — students will not receive emails.
+
+### For real student email delivery (recommended)
+
+1. Register any domain (~$1–3/yr from Namecheap, Cloudflare Registrar, etc.).
+2. In the Resend dashboard → **Domains** → add your domain → add the provided DNS records.
+3. Use `notifications@yourdomain.com` (or similar) as the FROM address.
+4. Create an account at [resend.com](https://resend.com) → **API Keys** → generate key → set as `RESEND_API_KEY`.
+5. Update the `from` field in `src/features/notifications/trigger.ts`:
+   ```ts
+   from: "LAT Notifications <notifications@yourdomain.com>",
+   ```
+
+### For testing/demo only
+
+Skip domain purchase. Resend provides `onboarding@resend.dev` as a shared sender but it only delivers to your own Resend account email. Use your own email as a student during testing.
+
+In `src/features/notifications/trigger.ts` set:
+```ts
+from: "LAT Notifications <onboarding@resend.dev>",
+```
 
 ---
 
@@ -46,7 +63,7 @@ All variables required in Vercel dashboard and `.env.local` for local dev:
 |----------|-------------|---------|
 | `DATABASE_URL` | Supabase pooled connection string | `postgresql://postgres.[ref]:[pass]@aws-0-[region].pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1` |
 | `NEXTAUTH_SECRET` | Random 32-byte base64 string | `openssl rand -base64 32` |
-| `NEXTAUTH_URL` | Canonical deployment URL | `https://lat.yourdomain.com` |
+| `NEXTAUTH_URL` | Canonical deployment URL | `https://your-app.vercel.app` |
 | `RESEND_API_KEY` | Resend API key | `re_abc123...` |
 | `ADMIN_EMAIL` | Admin login email | `admin@lasu.edu.ng` |
 | `ADMIN_PASSWORD_HASH` | bcrypt hash of admin password | see below |
