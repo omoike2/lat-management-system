@@ -91,7 +91,9 @@ export function TimetableGrid({ entries, slots, mode, onCellClick }: TimetableGr
                   }
 
                   const cellEntries = entryMap.get(slot.id) ?? [];
-                  const isConflict = cellEntries.length > 1;
+                  // Conflict = two entries in same slot share dept+level
+                  const groupKeys = cellEntries.map((e) => `${e.course.department}-${e.course.level}`);
+                  const isConflict = groupKeys.length !== new Set(groupKeys).size;
 
                   if (cellEntries.length === 0) {
                     if (mode === "admin") {
@@ -115,37 +117,43 @@ export function TimetableGrid({ entries, slots, mode, onCellClick }: TimetableGr
                     );
                   }
 
-                  const entry = cellEntries[0];
-                  const colorClass = DEPT_COLORS[deptColorIndex(entry.course.department)];
-
                   return (
-                    <button
-                      key={day}
-                      onClick={() => mode === "admin" && onCellClick?.(entry, slot.id, day)}
-                      disabled={mode === "student"}
-                      className={cn(
-                        "h-16 rounded-md border px-1.5 py-1 text-left overflow-hidden transition-all",
-                        colorClass,
-                        isConflict && "ring-2 ring-red-500 ring-offset-1",
-                        mode === "admin" && "hover:opacity-80 cursor-pointer",
-                        mode === "student" && "cursor-default"
-                      )}
-                    >
-                      <div className="flex items-start justify-between gap-0.5">
-                        <span className="text-[11px] font-bold leading-tight truncate">
-                          {entry.course.code}
-                        </span>
-                        {isConflict && (
-                          <AlertTriangle className="w-3 h-3 text-red-600 flex-shrink-0 mt-px" />
-                        )}
-                      </div>
-                      <span className="text-[10px] leading-tight text-current/70 block truncate">
-                        {entry.venue.name}
-                      </span>
-                      <span className="text-[10px] leading-tight text-current/70 block truncate">
-                        {entry.lecturer.name}
-                      </span>
-                    </button>
+                    <div key={day} className="flex flex-col gap-0.5">
+                      {cellEntries.map((entry) => {
+                        const colorClass = DEPT_COLORS[deptColorIndex(entry.course.department)];
+                        const entryKey = `${entry.course.department}-${entry.course.level}`;
+                        const isDupe = groupKeys.filter((k) => k === entryKey).length > 1;
+                        return (
+                          <button
+                            key={entry.id}
+                            onClick={() => mode === "admin" && onCellClick?.(entry, slot.id, day)}
+                            disabled={mode === "student"}
+                            className={cn(
+                              "flex-1 min-h-14 rounded-md border px-1.5 py-1 text-left overflow-hidden transition-all",
+                              colorClass,
+                              isDupe && "ring-2 ring-red-500 ring-offset-1",
+                              mode === "admin" && "hover:opacity-80 cursor-pointer",
+                              mode === "student" && "cursor-default"
+                            )}
+                          >
+                            <div className="flex items-start justify-between gap-0.5">
+                              <span className="text-[11px] font-bold leading-tight truncate">
+                                {entry.course.code}
+                              </span>
+                              {isDupe && (
+                                <AlertTriangle className="w-3 h-3 text-red-600 flex-shrink-0 mt-px" />
+                              )}
+                            </div>
+                            <span className="text-[10px] leading-tight text-current/70 block truncate">
+                              {entry.venue.name}
+                            </span>
+                            <span className="text-[10px] leading-tight text-current/70 block truncate">
+                              {entry.lecturer.name}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
                   );
                 })}
               </div>
