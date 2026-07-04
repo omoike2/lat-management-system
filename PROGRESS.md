@@ -47,7 +47,7 @@ Last updated: 2026-07-04  ·  Current phase: 1
 - [x] `pnpm test && pnpm build && pnpm lint` → commit `feat(phase-3): design tokens and admin shell`
 - Note: route groups renamed to real path segments (admin/, student/) for correct URLs
 
-## Phase 4 — CRUD slices (courses, lecturers, venues)  [ ]
+## Phase 4 — CRUD slices (courses, lecturers, venues)  [x]
 
 Courses:
 - [ ] `features/courses/schema.ts` — CreateCourseSchema, UpdateCourseSchema
