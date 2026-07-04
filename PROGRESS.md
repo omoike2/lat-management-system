@@ -23,15 +23,15 @@ Last updated: 2026-07-04  ·  Current phase: 1
 - [x] Verify: `db:push` syncs; `db:seed` populates; `db:studio` shows rows
 - [x] `pnpm test && pnpm build && pnpm lint` → commit `feat(phase-1): data layer and seed`
 
-## Phase 2 — Core lib + shared types  [ ]
+## Phase 2 — Core lib + shared types  [x]
 
-- [ ] `src/types/index.ts` — `ActionResult<T>`, shared enums, day labels
-- [ ] `src/lib/auth.ts` — NextAuth v5, Credentials provider, `auth()` export
-- [ ] `src/lib/mailer.ts` — Resend client singleton
-- [ ] `src/lib/utils.ts` — `cn()`, `formatTime()`, `dayLabel()`
-- [ ] `src/middleware.ts` — protect `(admin)` routes, redirect → `/login`
-- [ ] Verify: `pnpm build` typechecks clean
-- [ ] `pnpm test && pnpm build && pnpm lint` → commit `feat(phase-2): core lib auth and shared types`
+- [x] `src/types/index.ts` — `ActionResult<T>`, shared enums, day labels
+- [x] `src/lib/auth.ts` — NextAuth v5, Credentials provider, `auth()` export
+- [x] `src/lib/mailer.ts` — Resend client singleton
+- [x] `src/lib/utils.ts` — `cn()`, `formatTime()`, `dayLabel()`
+- [x] `src/proxy.ts` — protect `(admin)` routes, redirect → `/login` (Next.js 16 convention)
+- [x] Verify: `pnpm build` typechecks clean
+- [x] `pnpm test && pnpm build && pnpm lint` → commit `feat(phase-2): core lib auth and shared types`
 
 ## Phase 3 — Design tokens + shell  [ ]
 
