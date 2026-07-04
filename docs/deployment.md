@@ -119,12 +119,15 @@ Vercel Hobby does not support sub-daily cron schedules, so use **cron-job.org** 
 
 1. Create a free account at [cron-job.org](https://cron-job.org)
 2. Click **Create cronjob**
-3. Fill in:
-   - **URL:** `https://your-app.vercel.app/api/cron/notify?secret=YOUR_CRON_SECRET`
+3. **General tab:**
+   - **URL:** `https://your-app.vercel.app/api/cron/notify`
    - **Schedule:** every 5 minutes
-4. Save and enable
-
-No headers, no POST — the secret travels as a query param.
+4. **Advanced tab** (expand it):
+   - **Request method:** `POST`
+   - Under **Headers**, click Add header:
+     - Name: `Authorization`
+     - Value: `Bearer YOUR_CRON_SECRET`
+5. Save and enable
 
 **Cron behavior:**
 - Fires every 5 minutes
@@ -142,7 +145,8 @@ No headers, no POST — the secret travels as a query param.
 5. Register as a student at `/student/register` → confirm personal timetable loads.
 6. Test the cron handler:
    ```bash
-   curl "https://your-app.vercel.app/api/cron/notify?secret=YOUR_CRON_SECRET"
+   curl -X POST https://your-app.vercel.app/api/cron/notify \
+     -H "Authorization: Bearer YOUR_CRON_SECRET"
    ```
    Expect `{"sent":0}` (or a positive count if entries fall in the 25–35 min window).
 
@@ -203,7 +207,8 @@ createdb lat_dev
 - Check cron-job.org dashboard — confirm the job is enabled and not erroring.
 - Test the handler directly:
   ```bash
-  curl "https://your-app.vercel.app/api/cron/notify?secret=YOUR_CRON_SECRET"
+  curl -X POST https://your-app.vercel.app/api/cron/notify \
+    -H "Authorization: Bearer YOUR_CRON_SECRET"
   ```
 
 **Auth redirect errors after deploy**
