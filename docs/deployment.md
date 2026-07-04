@@ -54,7 +54,6 @@ All variables required in Vercel dashboard and `.env.local` for local dev:
 |----------|-------------|---------|
 | `DATABASE_URL` | Supabase pooled connection string | `postgresql://postgres.[ref]:[pass]@aws-0-[region].pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1` |
 | `NEXTAUTH_SECRET` | Random 32-byte base64 string | `openssl rand -base64 32` |
-| `NEXTAUTH_URL` | Canonical deployment URL | `https://your-app.vercel.app` |
 | `GMAIL_USER` | Gmail address used to send emails | `lat.lasu.notify@gmail.com` |
 | `GMAIL_APP_PASSWORD` | Gmail App Password (not login password) | `xxxx xxxx xxxx xxxx` |
 | `ADMIN_EMAIL` | Admin login email | `admin@lasu.edu.ng` |
@@ -211,5 +210,6 @@ createdb lat_dev
     -H "Authorization: Bearer <CRON_SECRET>"
   ```
 
-**`NEXTAUTH_URL` mismatch**
-- Must match the exact deployment URL (no trailing slash). Mismatches cause OAuth redirect errors.
+**Auth redirect errors after deploy**
+- NextAuth v5 auto-detects the URL from `VERCEL_URL` on Vercel — no manual `NEXTAUTH_URL` needed.
+- If redirects still misbehave, set `AUTH_URL` (the v5 env var name) to your exact deployment URL with no trailing slash.
