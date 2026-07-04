@@ -106,14 +106,15 @@ Venues:
 - [x] Verify: manual POST sends reminder; updateEntry fires change email
 - [x] `pnpm test && pnpm build && pnpm lint` → commit `feat(phase-7): notifications cron and email triggers`
 
-## Phase 8 — Student flow  [ ]
+## Phase 8 — Student flow  [x]
 
-- [ ] `features/students/` — schema, actions (register → cookie), queries
-- [ ] `app/(student)/layout.tsx` — top bar, no sidebar
-- [ ] `app/(student)/register/page.tsx` — form → cookie → redirect
-- [ ] `app/(student)/timetable/page.tsx` — read-only filtered grid, mobile stacked cards < md
-- [ ] Verify: register → filtered timetable; mobile layout stacks correctly
-- [ ] `pnpm test && pnpm build && pnpm lint` → commit `feat(phase-8): student registration and personal timetable`
+- [x] `features/students/` — schema, actions (register → cookie), queries
+- [x] `app/student/layout.tsx` — top bar, no sidebar
+- [x] `app/student/register/page.tsx` — form → cookie → redirect
+- [x] `app/student/timetable/page.tsx` — read-only filtered grid, mobile stacked cards < md
+- [x] `components/student-schedule-list.tsx` — mobile day-grouped list
+- [x] Verify: register → filtered timetable; mobile layout stacks correctly
+- [x] `pnpm test && pnpm build && pnpm lint` → commit `feat(phase-8): student registration and personal timetable`
 
 ## Phase 9 — Performance tests + polish  [ ]
 

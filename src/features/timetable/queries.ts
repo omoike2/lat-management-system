@@ -49,3 +49,15 @@ export async function getTimetableSummary(semester: string): Promise<{ entryCoun
   const entryCount = await db.timetableEntry.count({ where: { semester } });
   return { entryCount };
 }
+
+export async function getStudentTimetableEntries(
+  department: string,
+  level: number,
+  semester: string
+): Promise<TimetableEntryWithRelations[]> {
+  return db.timetableEntry.findMany({
+    where: { semester, course: { department, level } },
+    include: { course: true, lecturer: true, venue: true, slot: true },
+    orderBy: [{ slot: { dayOfWeek: "asc" } }, { slot: { startTime: "asc" } }],
+  });
+}
