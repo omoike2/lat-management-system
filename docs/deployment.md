@@ -118,15 +118,12 @@ The reminder handler is at `POST /api/cron/notify`, protected by `Authorization:
 Vercel Hobby does not support sub-daily cron schedules, so use **cron-job.org** (free, no code required):
 
 1. Create a free account at [cron-job.org](https://cron-job.org)
-2. Click **Create cronjob**
-3. **General tab:**
-   - **URL:** `https://your-app.vercel.app/api/cron/notify`
-   - **Schedule:** every 5 minutes
-4. **Advanced tab** (expand it):
-   - **Request method:** `POST`
-   - Under **Headers**, click Add header:
-     - Name: `Authorization`
-     - Value: `Bearer YOUR_CRON_SECRET`
+2. Click **Create cronjob** → choose **Import from curl**
+3. Paste:
+   ```
+   curl -X POST https://your-app.vercel.app/api/cron/notify -H "Authorization: Bearer YOUR_CRON_SECRET"
+   ```
+4. Set schedule to every 5 minutes
 5. Save and enable
 
 **Cron behavior:**
