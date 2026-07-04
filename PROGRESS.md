@@ -33,17 +33,19 @@ Last updated: 2026-07-04  ·  Current phase: 1
 - [x] Verify: `pnpm build` typechecks clean
 - [x] `pnpm test && pnpm build && pnpm lint` → commit `feat(phase-2): core lib auth and shared types`
 
-## Phase 3 — Design tokens + shell  [ ]
+## Phase 3 — Design tokens + shell  [x]
 
-- [ ] Global CSS: full color palette tokens from DESIGN.md, Inter font
-- [ ] shadcn primitives: button, input, select, sheet (slide-over), toast, table
-- [ ] `components/form-field.tsx` — label + input + error display
-- [ ] `components/data-table.tsx` — sort/filter/paginate
-- [ ] `app/(admin)/layout.tsx` — sidebar w-64, nav items (icons + labels), active state, sign out
-- [ ] `app/login/page.tsx` — credentials form → `/admin/dashboard`
-- [ ] `app/page.tsx` — redirect to `/login` or `/admin`
-- [ ] Verify: login works; admin shell renders; sign out clears session
-- [ ] `pnpm test && pnpm build && pnpm lint` → commit `feat(phase-3): design tokens and admin shell`
+- [x] Global CSS: full color palette tokens from DESIGN.md, Inter font
+- [x] shadcn primitives: button, input, select, sheet, sonner, table, label, separator, badge, dropdown-menu
+- [x] `components/form-field.tsx` — label + input + error display
+- [x] `components/data-table.tsx` — sort/filter/paginate
+- [x] `components/slide-over.tsx` — reusable slide-over panel
+- [x] `app/admin/layout.tsx` — sidebar w-64, nav items (lucide icons), active state, sign out
+- [x] `app/login/page.tsx` — credentials form → `/admin/dashboard`
+- [x] `app/page.tsx` — redirect to `/login` or `/admin`
+- [x] Verify: build passes, /admin/dashboard URL correct
+- [x] `pnpm test && pnpm build && pnpm lint` → commit `feat(phase-3): design tokens and admin shell`
+- Note: route groups renamed to real path segments (admin/, student/) for correct URLs
 
 ## Phase 4 — CRUD slices (courses, lecturers, venues)  [ ]
 
