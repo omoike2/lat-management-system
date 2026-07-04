@@ -78,11 +78,16 @@ openssl rand -base64 32   # use once for NEXTAUTH_SECRET, once for CRON_SECRET
 
 ## 4. Database Schema + Seed
 
-Run once after setting `DATABASE_URL`:
+Run locally with `DATABASE_URL` set to the **pooled** Supabase connection string (port 6543):
 
 ```bash
 pnpm db:push    # applies prisma/schema.prisma to the live DB
 pnpm db:seed    # creates admin account + sample time slots
+```
+
+The pooled URL format:
+```
+DATABASE_URL=postgresql://postgres.[ref]:[password]@aws-0-[region].pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1
 ```
 
 > `db:push` uses `prisma db push` (no migration history). For production schema changes, re-run `db:push` — Prisma will warn about destructive changes before applying.
