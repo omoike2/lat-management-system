@@ -120,13 +120,11 @@ Vercel Hobby does not support sub-daily cron schedules, so use **cron-job.org** 
 1. Create a free account at [cron-job.org](https://cron-job.org)
 2. Click **Create cronjob**
 3. Fill in:
-   - **URL:** `https://your-deployment.vercel.app/api/cron/notify`
-   - **Request method:** `POST`
+   - **URL:** `https://your-app.vercel.app/api/cron/notify?secret=YOUR_CRON_SECRET`
    - **Schedule:** every 5 minutes
-4. Under **Headers**, add:
-   - Name: `Authorization`
-   - Value: `Bearer <your CRON_SECRET value>`
-5. Save and enable
+4. Save and enable
+
+No headers, no POST — the secret travels as a query param.
 
 **Cron behavior:**
 - Fires every 5 minutes
@@ -142,12 +140,11 @@ Vercel Hobby does not support sub-daily cron schedules, so use **cron-job.org** 
 3. Navigate to **Courses** → create a course — confirm it saves.
 4. Navigate to **Timetable** → click **Generate** — confirm entries appear.
 5. Register as a student at `/student/register` → confirm personal timetable loads.
-6. Manually trigger the cron:
+6. Test the cron handler:
    ```bash
-   curl -X POST https://your-deployment.vercel.app/api/cron/notify \
-     -H "Authorization: Bearer <CRON_SECRET>"
+   curl "https://your-app.vercel.app/api/cron/notify?secret=YOUR_CRON_SECRET"
    ```
-   Expect `{"ok":true,"sent":0}` (or a positive count if entries fall in window).
+   Expect `{"sent":0}` (or a positive count if entries fall in the 25–35 min window).
 
 ---
 
@@ -204,10 +201,9 @@ createdb lat_dev
 
 **Cron not firing**
 - Check cron-job.org dashboard — confirm the job is enabled and not erroring.
-- Manually POST to `/api/cron/notify` to test the handler independently:
+- Test the handler directly:
   ```bash
-  curl -X POST https://your-deployment.vercel.app/api/cron/notify \
-    -H "Authorization: Bearer <CRON_SECRET>"
+  curl "https://your-app.vercel.app/api/cron/notify?secret=YOUR_CRON_SECRET"
   ```
 
 **Auth redirect errors after deploy**

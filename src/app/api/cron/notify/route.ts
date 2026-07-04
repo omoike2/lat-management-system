@@ -2,9 +2,24 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { sendReminders } from "@/features/notifications/trigger";
 
+function isAuthorized(req: NextRequest): boolean {
+  if (!process.env.CRON_SECRET) return false;
+  const bearer = req.headers.get("authorization");
+  if (bearer === `Bearer ${process.env.CRON_SECRET}`) return true;
+  const qs = req.nextUrl.searchParams.get("secret");
+  return qs === process.env.CRON_SECRET;
+}
+
+export async function GET(req: NextRequest): Promise<NextResponse> {
+  return handler(req);
+}
+
 export async function POST(req: NextRequest): Promise<NextResponse> {
-  const auth = req.headers.get("authorization");
-  if (!process.env.CRON_SECRET || auth !== `Bearer ${process.env.CRON_SECRET}`) {
+  return handler(req);
+}
+
+async function handler(req: NextRequest): Promise<NextResponse> {
+  if (!isAuthorized(req)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
