@@ -1,0 +1,42 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - generic [ref=f1e3]:
+      - generic [ref=f1e7]:
+        - generic [ref=f1e9]: L
+        - generic [ref=f1e10]: LASU — Academic Timetable
+      - generic [ref=f1e11]:
+        - heading "Conflict-free scheduling, automatically." [level=1] [ref=f1e12]:
+          - text: Conflict-free
+          - text: scheduling,
+          - text: automatically.
+        - paragraph [ref=f1e13]: LAT generates optimised timetables for every department, resolves clashes in seconds, and notifies students of any changes.
+      - generic [ref=f1e14]:
+        - generic [ref=f1e15]:
+          - img [ref=f1e17]
+          - generic [ref=f1e19]: Automated timetable generation
+        - generic [ref=f1e20]:
+          - img [ref=f1e22]
+          - generic [ref=f1e25]: Real-time conflict detection
+        - generic [ref=f1e26]:
+          - img [ref=f1e28]
+          - generic [ref=f1e31]: 30-minute email reminders
+        - generic [ref=f1e32]:
+          - img [ref=f1e34]
+          - generic [ref=f1e39]: Per-student filtered views
+    - generic [ref=f1e41]:
+      - generic [ref=f1e42]:
+        - heading "Sign in to LAT" [level=2] [ref=f1e43]
+        - paragraph [ref=f1e44]: Admin access only. Enter your credentials below.
+      - generic [ref=f1e45]:
+        - generic [ref=f1e46]:
+          - generic [ref=f1e47]: Email address
+          - textbox "Email address" [ref=f1e48]:
+            - /placeholder: admin@lasu.edu.ng
+        - generic [ref=f1e49]:
+          - generic [ref=f1e50]: Password
+          - textbox "Password" [ref=f1e51]:
+            - /placeholder: ••••••••
+        - button "Sign in" [ref=f1e52]
+      - paragraph [ref=f1e53]: Lagos State University · Academic Timetable System
+  - button "Open Next.js Dev Tools" [ref=f1e59] [cursor=pointer]:
+    - img [ref=f1e60]

@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import type { TimeSlot } from "@prisma/client";
 import type { TimetableEntryWithRelations } from "./types";
 
 export async function getEntriesForSemester(semester: string): Promise<TimetableEntryWithRelations[]> {
@@ -36,4 +37,15 @@ export async function listSemesters(): Promise<string[]> {
     orderBy: { semester: "desc" },
   });
   return rows.map((r) => r.semester);
+}
+
+export async function getTimeSlots(): Promise<TimeSlot[]> {
+  return db.timeSlot.findMany({
+    orderBy: [{ startTime: "asc" }, { dayOfWeek: "asc" }],
+  });
+}
+
+export async function getTimetableSummary(semester: string): Promise<{ entryCount: number }> {
+  const entryCount = await db.timetableEntry.count({ where: { semester } });
+  return { entryCount };
 }
