@@ -52,7 +52,8 @@ All variables required in Vercel dashboard and `.env.local` for local dev:
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `DATABASE_URL` | Supabase pooled connection string | `postgresql://postgres.[ref]:[pass]@aws-0-[region].pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1` |
+| `DATABASE_URL` | Supabase pooled connection (runtime) | `postgresql://postgres.[ref]:[pass]@aws-0-[region].pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1` |
+| `DIRECT_URL` | Supabase direct connection (schema ops) | `postgresql://postgres.[ref]:[pass]@db.[ref].supabase.co:5432/postgres` |
 | `NEXTAUTH_SECRET` | Random 32-byte base64 string | `openssl rand -base64 32` |
 | `GMAIL_USER` | Gmail address used to send emails | `lat.lasu.notify@gmail.com` |
 | `GMAIL_APP_PASSWORD` | Gmail App Password (not login password) | `xxxx xxxx xxxx xxxx` |
@@ -85,10 +86,17 @@ pnpm db:push    # applies prisma/schema.prisma to the live DB
 pnpm db:seed    # creates admin account + sample time slots
 ```
 
-The pooled URL format:
-```
+Set both variables in `.env.local` — `db:push` uses the direct connection, the app uses the pooled one:
+
+```env
+# pooled — runtime (Vercel serverless)
 DATABASE_URL=postgresql://postgres.[ref]:[password]@aws-0-[region].pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1
+
+# direct — schema ops only (db:push, db:seed)
+DIRECT_URL=postgresql://postgres.[ref]:[password]@db.[ref].supabase.co:5432/postgres
 ```
+
+Both URLs are in Supabase: **Settings → Database → Connection string**. Pick "Transaction mode" for `DATABASE_URL`, "Direct connection" for `DIRECT_URL`.
 
 > `db:push` uses `prisma db push` (no migration history). For production schema changes, re-run `db:push` — Prisma will warn about destructive changes before applying.
 
