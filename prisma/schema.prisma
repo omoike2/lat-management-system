@@ -69,7 +69,7 @@ model TimeSlot {
 
 model TimetableEntry {
   id           String   @id @default(cuid())
-  course       Course   @relation(fields: [courseId], references: [id])
+  course       Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   courseId     String
   lecturer     Lecturer @relation(fields: [lecturerId], references: [id])
   lecturerId   String
