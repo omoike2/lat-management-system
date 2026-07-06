@@ -4,11 +4,42 @@ import bcrypt from "bcryptjs";
 const db = new PrismaClient();
 
 const DEPARTMENTS = [
-  "Computer Science",
-  "Mathematics",
-  "Physics",
-  "Chemistry",
-  "Biology",
+  "Electronics and Computer Engineering",
+  "Mechanical Engineering",
+  "Chemical Engineering",
+];
+
+const ECE_LECTURERS = [
+  "A. Prof Shoewu",
+  "Prof Yusuf",
+  "Dr Mary",
+  "Dr Ajasa",
+  "Engr Mumini",
+  "Dr L.A",
+  "Engr Oni",
+  "Engr Folorunsho",
+  "Dr Ogundare",
+  "Prof Adetona",
+  "Dr Balogun",
+  "Engr Nathaniel",
+];
+
+const ME_LECTURERS = [
+  "Prof Mechanical 1",
+  "Prof Mechanical 2",
+  "Dr Mechanical 1",
+  "Dr Mechanical 2",
+  "Engr Mechanical 1",
+  "Engr Mechanical 2",
+];
+
+const CHE_LECTURERS = [
+  "Prof Chemical 1",
+  "Prof Chemical 2",
+  "Dr Chemical 1",
+  "Dr Chemical 2",
+  "Engr Chemical 1",
+  "Engr Chemical 2",
 ];
 
 const LEVELS = [100, 200, 300, 400, 500];
@@ -56,35 +87,63 @@ async function main() {
 
   // Venues — 10 total
   const venueData = [
-    { name: "LT-1", capacity: 300, type: VenueType.LECTURE_HALL },
-    { name: "LT-2", capacity: 250, type: VenueType.LECTURE_HALL },
-    { name: "LT-3", capacity: 200, type: VenueType.LECTURE_HALL },
-    { name: "LT-4", capacity: 150, type: VenueType.LECTURE_HALL },
-    { name: "CS Lab A", capacity: 50, type: VenueType.LAB },
-    { name: "CS Lab B", capacity: 50, type: VenueType.LAB },
-    { name: "Sci Lab A", capacity: 60, type: VenueType.LAB },
-    { name: "Sci Lab B", capacity: 60, type: VenueType.LAB },
-    { name: "Seminar A", capacity: 40, type: VenueType.SEMINAR_ROOM },
-    { name: "Seminar B", capacity: 40, type: VenueType.SEMINAR_ROOM },
+    { name: "ECE Classroom 1", capacity: 120, type: VenueType.LECTURE_HALL },
+    { name: "ECE Classroom 2", capacity: 120, type: VenueType.LECTURE_HALL },
+    { name: "ECE Classroom 3", capacity: 120, type: VenueType.LECTURE_HALL },
+    { name: "ECE Classroom 4", capacity: 120, type: VenueType.LECTURE_HALL },
+
+    { name: "ME Classroom 1", capacity: 120, type: VenueType.LECTURE_HALL },
+    { name: "ME Classroom 2", capacity: 120, type: VenueType.LECTURE_HALL },
+    { name: "ME Lab 1", capacity: 60, type: VenueType.LAB },
+
+    { name: "CHE Classroom 1", capacity: 120, type: VenueType.LECTURE_HALL },
+    { name: "CHE Classroom 2", capacity: 120, type: VenueType.LECTURE_HALL },
+    { name: "CHE Lab 1", capacity: 60, type: VenueType.LAB },
   ];
   await db.venue.createMany({ data: venueData });
-  console.log("Venues: 10");
+  console.log("Venues: 10"); // Updated engineering venues
 
-  // Lecturers — 20 total (4 per department)
-  const lecturers = await Promise.all(
-    DEPARTMENTS.flatMap((dept, di) =>
-      [1, 2, 3, 4].map((n) =>
-        db.lecturer.create({
-          data: {
-            name: `Dr. ${dept.split(" ")[0]} ${n}`,
-            email: `lecturer${di * 4 + n}@lasu.edu.ng`,
-            department: dept,
-          },
-        })
-      )
-    )
-  );
-  console.log("Lecturers: 20");
+  // Lecturers
+  const lecturers = [];
+
+  for (const name of ECE_LECTURERS) {
+    lecturers.push(
+      await db.lecturer.create({
+        data: {
+          name,
+          email:
+            name.toLowerCase().replace(/[^a-z0-9]+/g, ".") + "@lasu.edu.ng",
+          department: "Electronics and Computer Engineering",
+        },
+      }),
+    );
+  }
+
+  for (let i = 0; i < ME_LECTURERS.length; i++) {
+    lecturers.push(
+      await db.lecturer.create({
+        data: {
+          name: ME_LECTURERS[i],
+          email: `me${i + 1}@lasu.edu.ng`,
+          department: "Mechanical Engineering",
+        },
+      }),
+    );
+  }
+
+  for (let i = 0; i < CHE_LECTURERS.length; i++) {
+    lecturers.push(
+      await db.lecturer.create({
+        data: {
+          name: CHE_LECTURERS[i],
+          email: `che${i + 1}@lasu.edu.ng`,
+          department: "Chemical Engineering",
+        },
+      }),
+    );
+  }
+
+  console.log(`Lecturers: ${lecturers.length}`);
 
   // Courses — 50 total (2 per dept × 5 levels × 1 per combo = 10 per dept = 50)
   // Each course gets weeklyFreq=2 and one lecturer assigned
