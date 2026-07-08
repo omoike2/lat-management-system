@@ -67,11 +67,11 @@
 }
 
 :root {
-  /* LASU brand */
-  --brand: #006633;
-  --brand-hover: #005229;
-  --brand-light: #e6f2ec;
-  --brand-subtle: #f0f9f4;
+  /* LASU brand — blue */
+  --brand: #0055a4;
+  --brand-hover: #003f7d;
+  --brand-light: #e6eff7;
+  --brand-subtle: #f0f6fb;
   --bg: #f8fafc;
   --border-color: #e2e8f0;
   --border-strong: #cbd5e1;

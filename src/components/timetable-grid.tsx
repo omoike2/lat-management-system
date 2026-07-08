@@ -3,6 +3,7 @@
 import { AlertTriangle } from "lucide-react";
 import type { TimeSlot } from "@prisma/client";
 import type { TimetableEntryWithRelations } from "@/features/timetable/types";
+import type { StudyBlock } from "@/features/students/study-planner";
 import { formatTime } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 
@@ -23,10 +24,11 @@ interface TimetableGridProps {
   entries: TimetableEntryWithRelations[];
   slots: TimeSlot[];
   mode: "admin" | "student";
+  studyBlocks?: StudyBlock[];
   onCellClick?: (entry: TimetableEntryWithRelations | null, slotId: string, day: number) => void;
 }
 
-export function TimetableGrid({ entries, slots, mode, onCellClick }: TimetableGridProps) {
+export function TimetableGrid({ entries, slots, mode, studyBlocks, onCellClick }: TimetableGridProps) {
   const depts = [...new Set(entries.map((e) => e.course.department))].sort();
   const deptColorIndex = (dept: string) => depts.indexOf(dept) % DEPT_COLORS.length;
 
@@ -42,6 +44,12 @@ export function TimetableGrid({ entries, slots, mode, onCellClick }: TimetableGr
     const list = entryMap.get(entry.slotId) ?? [];
     list.push(entry);
     entryMap.set(entry.slotId, list);
+  }
+
+  // Study block lookup: slotId → StudyBlock
+  const studyMap = new Map<string, StudyBlock>();
+  for (const block of studyBlocks ?? []) {
+    studyMap.set(block.slotId, block);
   }
 
   return (
@@ -106,6 +114,25 @@ export function TimetableGrid({ entries, slots, mode, onCellClick }: TimetableGr
                             +
                           </span>
                         </button>
+                      );
+                    }
+                    const studyBlock = studyMap.get(slot.id);
+                    if (studyBlock) {
+                      return (
+                        <div
+                          key={day}
+                          className="h-16 rounded-md border border-amber-200 bg-amber-50 px-1.5 py-1 overflow-hidden"
+                        >
+                          <span className="text-[10px] font-semibold text-amber-700 block truncate">
+                            📖 Self Study
+                          </span>
+                          <span className="text-[10px] text-amber-600 block truncate">
+                            {studyBlock.courseCode}
+                          </span>
+                          <span className="text-[10px] text-amber-500 block truncate">
+                            {studyBlock.courseTitle}
+                          </span>
+                        </div>
                       );
                     }
                     return (

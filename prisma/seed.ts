@@ -75,6 +75,9 @@ async function main() {
   await db.admin.create({ data: { email: adminEmail, passwordHash } });
   console.log(`Admin: ${adminEmail}`);
 
+  // Default password for all seeded lecturers (change per lecturer in production)
+  const lecturerPasswordHash = await bcrypt.hash("lecturer123", 10);
+
   // Time slots — 5 per day × 5 days = 25 total
   for (const day of DAYS) {
     for (const slot of TIME_SLOTS) {
@@ -114,6 +117,7 @@ async function main() {
           email:
             name.toLowerCase().replace(/[^a-z0-9]+/g, ".") + "@lasu.edu.ng",
           department: "Electronics and Computer Engineering",
+          passwordHash: lecturerPasswordHash,
         },
       }),
     );
@@ -126,6 +130,7 @@ async function main() {
           name: ME_LECTURERS[i],
           email: `me${i + 1}@lasu.edu.ng`,
           department: "Mechanical Engineering",
+          passwordHash: lecturerPasswordHash,
         },
       }),
     );
@@ -138,6 +143,7 @@ async function main() {
           name: CHE_LECTURERS[i],
           email: `che${i + 1}@lasu.edu.ng`,
           department: "Chemical Engineering",
+          passwordHash: lecturerPasswordHash,
         },
       }),
     );

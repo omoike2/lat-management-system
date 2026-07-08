@@ -1,7 +1,11 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 # LAT Management System — Agent Operating Charter
 
 **Project:** LASU Academic Timetable Management System  
-**Stack:** Next.js 16 (App Router), TypeScript, PostgreSQL, Prisma, NextAuth.js v5, Tailwind CSS v4, shadcn/ui, Resend, pnpm  
+**Stack:** Next.js 16 (App Router), TypeScript, PostgreSQL, Prisma, NextAuth.js v5, Tailwind CSS v4, shadcn/ui, nodemailer (Gmail SMTP), pnpm  
 **Owner:** logickoder — senior engineer standards apply to all output.
 
 ---
@@ -147,20 +151,18 @@ Each `src/features/<name>/` slice follows this contract:
 ## STYLING SYSTEM
 
 **Framework:** Tailwind CSS v4 + shadcn/ui  
-**Theme:** Neutral base, LASU green accent (`#006633`), white surface
+**Theme:** Neutral base, LASU blue accent (`#0055a4`), white surface
 
-### Design tokens (set in `app/layout.tsx` globals):
+### Design tokens (set in `src/app/globals.css` `:root`):
 ```css
 :root {
-  --color-brand: #006633;
-  --color-brand-light: #e6f2ec;
-  --color-danger: #dc2626;
-  --color-warning: #d97706;
-  --color-surface: #ffffff;
-  --color-muted: #f8fafc;
-  --radius: 0.5rem;
+  --brand: #0055a4;
+  --brand-hover: #003f7d;
+  --brand-light: #e6eff7;
+  --brand-subtle: #f0f6fb;
 }
 ```
+All `--color-brand*` aliases in `:root` and `@theme inline` point via `var(--brand*)` — change only the four `--brand*` hex values to retheme.
 
 ### Component patterns:
 - **Pages:** `max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8`
@@ -218,29 +220,35 @@ Pure constraint checkers live in `constraints.ts` — no DB calls, takes existin
 ## NOTIFICATION SYSTEM
 
 **30-min reminder cron:** `api/cron/notify/route.ts`
-- Vercel Cron: `"*/5 * * * *"` (every 5 min, check window 25–35 min ahead)
+- External cron (cron-job.org, every 5 min) — Vercel Hobby doesn't support sub-daily cron
+- Accepts GET or POST; secret via `Authorization: Bearer <CRON_SECRET>` header only (never URL param)
 - Query entries where `startTime BETWEEN now+25min AND now+35min`
 - Fetch students matching `dept + level`
-- Batch send via Resend (one email per student per entry)
-- Guard: check `notificationSent` flag on entry to avoid duplicates
+- Batch send via nodemailer/Gmail SMTP (`Promise.allSettled`) — one email per student per entry
+- Guard: `reminderSent` flag on entry prevents duplicates
 
 **Change notification:** called from `timetable/actions.ts` after every `updateEntry`
 - Accepts `TimetableEntry` + `changeType: 'venue' | 'time' | 'cancellation'`
-- Fetches affected students, fires Resend batch
+- Fetches affected students, fires nodemailer batch
+
+**Email transport:** `src/lib/mailer.ts` — nodemailer with Gmail service, `GMAIL_USER` + `GMAIL_APP_PASSWORD`.
 
 ---
 
 ## ENV VARS
 
 ```env
-DATABASE_URL=
-NEXTAUTH_SECRET=
-NEXTAUTH_URL=
-RESEND_API_KEY=
+DATABASE_URL=          # Supabase pooled (port 6543) for runtime
+DIRECT_URL=            # Supabase direct (port 5432) for db:push / db:seed
+NEXTAUTH_SECRET=       # openssl rand -base64 32
+GMAIL_USER=            # Gmail address used to send emails
+GMAIL_APP_PASSWORD=    # Gmail App Password (not login password)
 ADMIN_EMAIL=
-ADMIN_PASSWORD_HASH=          # bcrypt hash
-CRON_SECRET=                  # validates Vercel cron calls
+ADMIN_PASSWORD_HASH=   # bcrypt hash — node -e "require('bcryptjs').hash('pw',10).then(console.log)"
+CRON_SECRET=           # validates /api/cron/notify Authorization header
 ```
+
+`NEXTAUTH_URL` is NOT needed — NextAuth v5 auto-detects from `VERCEL_URL` on Vercel.
 
 ---
 
@@ -249,11 +257,15 @@ CRON_SECRET=                  # validates Vercel cron calls
 ```bash
 pnpm dev          # local dev
 pnpm build        # production build
-pnpm db:push      # prisma db push (schema sync)
+pnpm db:push      # prisma db push — uses DIRECT_URL (port 5432), not DATABASE_URL
 pnpm db:studio    # prisma studio
 pnpm db:seed      # seed demo data
+pnpm db:reset     # drop + recreate (dev only)
 pnpm lint         # eslint
+pnpm test         # vitest unit + integration
 ```
+
+**Tailwind v4 CSS variable syntax:** use `bg-(--color-brand)` (parentheses), NOT `bg-[--color-brand]` (brackets). Brackets don't generate CSS rules for CSS var references in v4.
 
 ---
 
@@ -317,8 +329,7 @@ After completing each implementation phase:
 2. Run `pnpm build` — must compile clean.
 3. Run `pnpm lint` — zero errors.
 4. Commit with a message scoped to the phase: `feat(phase-N): <what landed>`.
-5. Update the corresponding phase checkbox in `PROGRESS.md`.
-6. Proceed to next phase.
+5. Proceed to next phase.
 
 Never commit with failing tests or type errors.
 

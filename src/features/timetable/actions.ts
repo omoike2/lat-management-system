@@ -103,7 +103,12 @@ export async function updateEntry(raw: unknown): Promise<ActionResult> {
   await db.timetableEntry.update({ where: { id }, data: updates });
   revalidatePath("/admin/timetable");
 
-  sendChangeNotification(id, "time", "Your class time or venue has been updated.").catch(console.error);
+  // Distinguish venue-only change from time change for accurate notification subject
+  const changeType = updates.slotId ? "time" : "venue";
+  const changeDetail = updates.slotId
+    ? "Your class time has been updated."
+    : "Your class venue has been updated.";
+  sendChangeNotification(id, changeType, changeDetail).catch(console.error);
 
   return { success: true };
 }

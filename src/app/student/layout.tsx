@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { cookies } from "next/headers";
 import { getStudentById } from "@/features/students/queries";
 
@@ -10,11 +11,35 @@ export default async function StudentLayout({ children }: { children: React.Reac
     <div className="min-h-screen bg-(--color-bg)">
       <header className="bg-(--color-brand) sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="flex items-center justify-center w-7 h-7 rounded-md bg-white/15 border border-white/25">
-              <span className="text-white text-xs font-bold leading-none">L</span>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2.5">
+              <div className="flex items-center justify-center w-7 h-7 rounded-md bg-white/15 border border-white/25">
+                <span className="text-white text-xs font-bold leading-none">L</span>
+              </div>
+              <span className="text-sm font-semibold text-white">LAT System</span>
             </div>
-            <span className="text-sm font-semibold text-white">LAT System</span>
+            {student && (
+              <nav className="hidden sm:flex items-center gap-1">
+                <Link
+                  href="/student/timetable"
+                  className="text-xs font-medium text-white/80 hover:text-white px-2.5 py-1.5 rounded-md hover:bg-white/10 transition-colors"
+                >
+                  Timetable
+                </Link>
+                <Link
+                  href="/student/courses"
+                  className="text-xs font-medium text-white/80 hover:text-white px-2.5 py-1.5 rounded-md hover:bg-white/10 transition-colors"
+                >
+                  My Courses
+                </Link>
+                <Link
+                  href="/student/study"
+                  className="text-xs font-medium text-white/80 hover:text-white px-2.5 py-1.5 rounded-md hover:bg-white/10 transition-colors"
+                >
+                  Study Plan
+                </Link>
+              </nav>
+            )}
           </div>
           {student && (
             <div className="text-right">

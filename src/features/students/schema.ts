@@ -9,3 +9,9 @@ export const RegisterStudentSchema = z.object({
 });
 
 export type RegisterStudentInput = z.infer<typeof RegisterStudentSchema>;
+
+export const CourseRegistrationSchema = z.object({
+  courseId: z.string().cuid("Invalid course ID"),
+});
+
+export type CourseRegistrationInput = z.infer<typeof CourseRegistrationSchema>;

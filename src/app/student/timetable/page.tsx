@@ -27,7 +27,7 @@ export default async function StudentTimetablePage({ searchParams }: StudentTime
   const semester = SEMESTERS.includes(semesterParam ?? "") ? (semesterParam ?? DEFAULT_SEMESTER) : DEFAULT_SEMESTER;
 
   const [entries, slots] = await Promise.all([
-    getStudentTimetableEntries(student.department, student.level, semester),
+    getStudentTimetableEntries(studentId, student.department, student.level, semester),
     getTimeSlots(),
   ]);
 

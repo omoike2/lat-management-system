@@ -1,4 +1,6 @@
 import { db } from "@/lib/db";
+import type { Lecturer } from "@prisma/client";
+import type { TimetableEntryWithRelations } from "@/features/timetable/types";
 import type { LecturerWithCourses } from "./types";
 
 export async function listLecturers(): Promise<LecturerWithCourses[]> {
@@ -12,5 +14,20 @@ export async function getLecturer(id: string): Promise<LecturerWithCourses | nul
   return db.lecturer.findUnique({
     where: { id },
     include: { courses: { include: { course: true } } },
+  });
+}
+
+export async function getLecturerById(id: string): Promise<Lecturer | null> {
+  return db.lecturer.findUnique({ where: { id } });
+}
+
+export async function getLecturerTimetableEntries(
+  lecturerId: string,
+  semester: string
+): Promise<TimetableEntryWithRelations[]> {
+  return db.timetableEntry.findMany({
+    where: { lecturerId, semester },
+    include: { course: true, lecturer: true, venue: true, slot: true },
+    orderBy: [{ slot: { dayOfWeek: "asc" } }, { slot: { startTime: "asc" } }],
   });
 }

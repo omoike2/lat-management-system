@@ -51,12 +51,19 @@ export async function getTimetableSummary(semester: string): Promise<{ entryCoun
 }
 
 export async function getStudentTimetableEntries(
+  studentId: string,
   department: string,
   level: number,
   semester: string
 ): Promise<TimetableEntryWithRelations[]> {
   return db.timetableEntry.findMany({
-    where: { semester, course: { department, level } },
+    where: {
+      semester,
+      OR: [
+        { course: { department, level } },
+        { course: { students: { some: { studentId } } } },
+      ],
+    },
     include: { course: true, lecturer: true, venue: true, slot: true },
     orderBy: [{ slot: { dayOfWeek: "asc" } }, { slot: { startTime: "asc" } }],
   });

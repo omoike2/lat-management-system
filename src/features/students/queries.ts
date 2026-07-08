@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import type { Student } from "@prisma/client";
+import type { Course, Student } from "@prisma/client";
 
 export async function getStudentByMatric(matric: string): Promise<Student | null> {
   return db.student.findUnique({ where: { matric } });
@@ -16,4 +16,32 @@ export async function listDepartmentsForStudent(): Promise<string[]> {
     orderBy: { department: "asc" },
   });
   return rows.map((r) => r.department);
+}
+
+export async function getRegisteredCourseIds(studentId: string): Promise<string[]> {
+  const rows = await db.studentCourse.findMany({
+    where: { studentId },
+    select: { courseId: true },
+  });
+  return rows.map((r) => r.courseId);
+}
+
+export async function listCoursesForRegistration(): Promise<Course[]> {
+  return db.course.findMany({ orderBy: [{ department: "asc" }, { level: "asc" }, { code: "asc" }] });
+}
+
+/** All courses a student is studying: dept+level courses plus any explicitly registered extras. */
+export async function getStudentCourses(
+  studentId: string,
+  department: string,
+  level: number
+): Promise<Course[]> {
+  const [deptCourses, registrations] = await Promise.all([
+    db.course.findMany({ where: { department, level }, orderBy: { code: "asc" } }),
+    db.studentCourse.findMany({
+      where: { studentId, NOT: { course: { department, level } } },
+      include: { course: true },
+    }),
+  ]);
+  return [...deptCourses, ...registrations.map((r) => r.course)];
 }

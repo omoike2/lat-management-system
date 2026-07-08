@@ -18,19 +18,21 @@ model Course {
   weeklyFreq Int              @default(2)
   lecturers  LecturerCourse[]
   entries    TimetableEntry[]
+  students   StudentCourse[]
   createdAt  DateTime         @default(now())
   updatedAt  DateTime         @updatedAt
 }
 
 model Lecturer {
-  id         String           @id @default(cuid())
-  name       String
-  email      String           @unique
-  department String?
-  courses    LecturerCourse[]
-  entries    TimetableEntry[]
-  createdAt  DateTime         @default(now())
-  updatedAt  DateTime         @updatedAt
+  id           String           @id @default(cuid())
+  name         String
+  email        String           @unique
+  department   String?
+  passwordHash String?
+  courses      LecturerCourse[]
+  entries      TimetableEntry[]
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
 }
 
 model LecturerCourse {
@@ -88,13 +90,23 @@ model TimetableEntry {
 }
 
 model Student {
-  id         String   @id @default(cuid())
+  id         String          @id @default(cuid())
   name       String
-  matric     String   @unique
-  email      String   @unique
+  matric     String          @unique
+  email      String          @unique
   department String
   level      Int
-  createdAt  DateTime @default(now())
+  courses    StudentCourse[]
+  createdAt  DateTime        @default(now())
+}
+
+model StudentCourse {
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId String
+  course    Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId  String
+
+  @@id([studentId, courseId])
 }
 
 model Admin {
