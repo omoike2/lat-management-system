@@ -1,12 +1,8 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { getStudentById } from "@/features/students/queries";
+import { requireStudentAuth } from "@/features/students/queries";
 import { getStudentTimetableEntries, getTimeSlots } from "@/features/timetable/queries";
 import { TimetableGrid } from "@/components/timetable-grid";
 import { StudentScheduleList } from "@/components/student-schedule-list";
-
-const SEMESTERS = ["2024/2025 First", "2024/2025 Second", "2025/2026 First", "2025/2026 Second"];
-const DEFAULT_SEMESTER = "2024/2025 First";
+import { SEMESTERS, DEFAULT_SEMESTER } from "@/lib/constants";
 
 interface StudentTimetablePageProps {
   searchParams: Promise<{ semester?: string }>;
@@ -15,13 +11,8 @@ interface StudentTimetablePageProps {
 export const metadata = { title: "My Timetable | LAT" };
 
 export default async function StudentTimetablePage({ searchParams }: StudentTimetablePageProps) {
-  const cookieStore = await cookies();
-  const studentId = cookieStore.get("studentId")?.value;
-
-  if (!studentId) redirect("/student/register");
-
-  const student = await getStudentById(studentId);
-  if (!student) redirect("/student/register");
+  const student = await requireStudentAuth();
+  const studentId = student.id;
 
   const { semester: semesterParam } = await searchParams;
   const semester = SEMESTERS.includes(semesterParam ?? "") ? (semesterParam ?? DEFAULT_SEMESTER) : DEFAULT_SEMESTER;

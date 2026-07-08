@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { getLecturerById } from "@/features/lecturers/queries";
+import { logoutLecturer } from "@/features/lecturers/actions";
 
 export default async function LecturerLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
@@ -28,13 +29,7 @@ export default async function LecturerLayout({ children }: { children: React.Rea
             )}
           </div>
           {lecturer ? (
-            <form
-              action={async () => {
-                "use server";
-                const { logoutLecturer } = await import("@/features/lecturers/actions");
-                await logoutLecturer();
-              }}
-            >
+            <form action={logoutLecturer}>
               <div className="flex items-center gap-3">
                 <div className="text-right hidden sm:block">
                   <p className="text-sm font-medium text-white">{lecturer.name}</p>

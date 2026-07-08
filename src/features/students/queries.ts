@@ -1,5 +1,17 @@
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import type { Course, Student } from "@prisma/client";
+
+/** Reads studentId cookie, fetches student, redirects to /student/register if missing. */
+export async function requireStudentAuth(): Promise<Student> {
+  const cookieStore = await cookies();
+  const studentId = cookieStore.get("studentId")?.value;
+  if (!studentId) redirect("/student/register");
+  const student = await getStudentById(studentId);
+  if (!student) redirect("/student/register");
+  return student;
+}
 
 export async function getStudentByMatric(matric: string): Promise<Student | null> {
   return db.student.findUnique({ where: { matric } });

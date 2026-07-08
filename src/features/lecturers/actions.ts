@@ -5,21 +5,15 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
 import { db } from "@/lib/db";
-import { auth } from "@/lib/auth";
+import { requireAdmin } from "@/lib/auth";
 import type { ActionResult } from "@/types";
 import { checkVenueClash, type EntryMinimal } from "@/features/timetable/constraints";
 import { sendChangeNotification } from "@/features/notifications/trigger";
 import { CreateLecturerSchema, UpdateLecturerSchema, LecturerLoginSchema, ChangeVenueSchema } from "./schema";
 
-async function requireAdmin(): Promise<ActionResult | null> {
-  const session = await auth();
-  if (!session) return { success: false, error: "Unauthorized" };
-  return null;
-}
-
 export async function createLecturer(raw: unknown): Promise<ActionResult<{ id: string }>> {
-  const session = await auth();
-  if (!session) return { success: false, error: "Unauthorized" };
+  const deny = await requireAdmin();
+  if (deny) return deny;
 
   const parsed = CreateLecturerSchema.safeParse(raw);
   if (!parsed.success) {

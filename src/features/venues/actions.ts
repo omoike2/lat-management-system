@@ -2,19 +2,13 @@
 
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
-import { auth } from "@/lib/auth";
+import { requireAdmin } from "@/lib/auth";
 import type { ActionResult } from "@/types";
 import { CreateVenueSchema, UpdateVenueSchema } from "./schema";
 
-async function requireAdmin(): Promise<ActionResult | null> {
-  const session = await auth();
-  if (!session) return { success: false, error: "Unauthorized" };
-  return null;
-}
-
 export async function createVenue(raw: unknown): Promise<ActionResult<{ id: string }>> {
-  const session = await auth();
-  if (!session) return { success: false, error: "Unauthorized" };
+  const deny = await requireAdmin();
+  if (deny) return deny;
 
   const parsed = CreateVenueSchema.safeParse(raw);
   if (!parsed.success) {

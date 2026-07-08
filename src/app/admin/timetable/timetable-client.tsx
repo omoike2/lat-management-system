@@ -2,18 +2,12 @@
 
 import { useState, useTransition } from "react";
 import type { TimeSlot } from "@prisma/client";
-import type { TimetableEntryWithRelations, ConflictReport } from "@/features/timetable/types";
+import type { TimetableEntryWithRelations, ConflictReport } from "@/types";
 import { generateTimetable } from "@/features/timetable/actions";
 import { TimetableGrid } from "@/components/timetable-grid";
 import { ConflictBadge } from "@/components/conflict-badge";
 import { ChevronDown, Loader2, Zap } from "lucide-react";
-
-const SEMESTERS = [
-  "2024/2025 First",
-  "2024/2025 Second",
-  "2025/2026 First",
-  "2025/2026 Second",
-];
+import { SEMESTERS } from "@/lib/constants";
 
 interface TimetableClientProps {
   initialEntries: TimetableEntryWithRelations[];

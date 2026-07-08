@@ -4,8 +4,7 @@ import { listVenues } from "@/features/venues/queries";
 import { getEntriesForSemester, getTimeSlots } from "@/features/timetable/queries";
 import { ConflictForm } from "./conflict-form";
 import { CheckCircle2 } from "lucide-react";
-
-const DEFAULT_SEMESTER = "2024/2025 First";
+import { DEFAULT_SEMESTER } from "@/lib/constants";
 
 export default async function ConflictsPage() {
   const [courses, lecturers, venues, entries, slots] = await Promise.all([

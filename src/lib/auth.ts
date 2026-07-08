@@ -2,6 +2,11 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { db } from "./db";
+export async function requireAdmin(): Promise<{ success: false; error: string } | null> {
+  const session = await auth();
+  if (!session) return { success: false, error: "Unauthorized" };
+  return null;
+}
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [

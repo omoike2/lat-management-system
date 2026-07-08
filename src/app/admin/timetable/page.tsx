@@ -1,7 +1,6 @@
 import { getEntriesForSemester, getTimeSlots } from "@/features/timetable/queries";
 import { TimetableClient } from "./timetable-client";
-
-const DEFAULT_SEMESTER = "2024/2025 First";
+import { DEFAULT_SEMESTER } from "@/lib/constants";
 
 export default async function TimetablePage() {
   const [entries, slots] = await Promise.all([

@@ -35,22 +35,19 @@ export async function registerStudent(raw: unknown): Promise<ActionResult> {
   return { success: true };
 }
 
-async function getStudentIdFromCookie(): Promise<string | null> {
+async function getStudentId(): Promise<string | null> {
   const cookieStore = await cookies();
   return cookieStore.get("studentId")?.value ?? null;
 }
 
 export async function registerCourse(raw: unknown): Promise<ActionResult> {
-  const studentId = await getStudentIdFromCookie();
+  const studentId = await getStudentId();
   if (!studentId) return { success: false, error: "Not logged in" };
 
   const parsed = CourseRegistrationSchema.safeParse(raw);
   if (!parsed.success) {
     return { success: false, error: parsed.error.errors[0]?.message ?? "Invalid course" };
   }
-
-  const course = await db.course.findUnique({ where: { id: parsed.data.courseId } });
-  if (!course) return { success: false, error: "Course not found" };
 
   await db.studentCourse.upsert({
     where: { studentId_courseId: { studentId, courseId: parsed.data.courseId } },
@@ -64,7 +61,7 @@ export async function registerCourse(raw: unknown): Promise<ActionResult> {
 }
 
 export async function unregisterCourse(raw: unknown): Promise<ActionResult> {
-  const studentId = await getStudentIdFromCookie();
+  const studentId = await getStudentId();
   if (!studentId) return { success: false, error: "Not logged in" };
 
   const parsed = CourseRegistrationSchema.safeParse(raw);

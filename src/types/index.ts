@@ -4,6 +4,8 @@ export type ActionResult<T = undefined> = {
   data?: T;
 };
 
+export type { TimetableEntryWithRelations, ConflictReport } from "@/features/timetable/types";
+
 export const DAY_LABELS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"] as const;
 export type DayLabel = (typeof DAY_LABELS)[number];
 

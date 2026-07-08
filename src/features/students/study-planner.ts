@@ -1,5 +1,5 @@
 import type { TimeSlot } from "@prisma/client";
-import type { TimetableEntryWithRelations } from "@/features/timetable/types";
+import type { TimetableEntryWithRelations } from "@/types";
 
 export type StudyBlock = {
   courseId: string;
@@ -15,6 +15,16 @@ type CourseSummary = {
   units: number;
 };
 
+function addBlock(
+  blocks: StudyBlock[],
+  taken: Set<string>,
+  course: CourseSummary,
+  slot: TimeSlot
+): void {
+  blocks.push({ courseId: course.id, courseCode: course.code, courseTitle: course.title, slotId: slot.id });
+  taken.add(slot.id);
+}
+
 /**
  * Generates a personal study timetable by filling free slots with study blocks.
  * Allocates `course.units` blocks per course, spread across different days.
@@ -29,42 +39,27 @@ export function planStudyTimetable(
   const availableSlots = allSlots.filter((s) => s.available && !occupiedSlotIds.has(s.id));
 
   const blocks: StudyBlock[] = [];
+  const takenByStudy = new Set<string>();
 
   for (const course of courses) {
     let remaining = course.units;
-    // Track days already used for this course to spread across the week
     const usedDays = new Set<number>();
 
+    // Pass 1: one block per day to spread across the week
     for (const slot of availableSlots) {
       if (remaining === 0) break;
-      // Skip if this day already has a study block for this course
-      if (usedDays.has(slot.dayOfWeek)) continue;
-      // Skip if this slot is already taken by another study block
-      if (blocks.some((b) => b.slotId === slot.id)) continue;
-
-      blocks.push({
-        courseId: course.id,
-        courseCode: course.code,
-        courseTitle: course.title,
-        slotId: slot.id,
-      });
+      if (usedDays.has(slot.dayOfWeek) || takenByStudy.has(slot.id)) continue;
+      addBlock(blocks, takenByStudy, course, slot);
       usedDays.add(slot.dayOfWeek);
       remaining--;
     }
 
-    // If we ran out of day-spread slots, fill remaining without day restriction
-    if (remaining > 0) {
-      for (const slot of availableSlots) {
-        if (remaining === 0) break;
-        if (blocks.some((b) => b.slotId === slot.id)) continue;
-        blocks.push({
-          courseId: course.id,
-          courseCode: course.code,
-          courseTitle: course.title,
-          slotId: slot.id,
-        });
-        remaining--;
-      }
+    // Pass 2: fill remaining units without the day-spread constraint
+    for (const slot of availableSlots) {
+      if (remaining === 0) break;
+      if (takenByStudy.has(slot.id)) continue;
+      addBlock(blocks, takenByStudy, course, slot);
+      remaining--;
     }
   }
 

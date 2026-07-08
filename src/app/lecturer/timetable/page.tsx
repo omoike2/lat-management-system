@@ -1,11 +1,7 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { getLecturerById, getLecturerTimetableEntries } from "@/features/lecturers/queries";
+import { requireLecturerAuth, getLecturerTimetableEntries } from "@/features/lecturers/queries";
 import { listVenues } from "@/features/venues/queries";
 import { VenueChangePanel } from "./venue-change-panel";
-
-const SEMESTERS = ["2024/2025 First", "2024/2025 Second", "2025/2026 First", "2025/2026 Second"];
-const DEFAULT_SEMESTER = "2024/2025 First";
+import { SEMESTERS, DEFAULT_SEMESTER } from "@/lib/constants";
 
 const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
 
@@ -16,20 +12,14 @@ interface LecturerTimetablePageProps {
 export const metadata = { title: "My Timetable | LAT Lecturer" };
 
 export default async function LecturerTimetablePage({ searchParams }: LecturerTimetablePageProps) {
-  const cookieStore = await cookies();
-  const lecturerId = cookieStore.get("lecturerId")?.value;
-
-  if (!lecturerId) redirect("/lecturer/login");
-
-  const lecturer = await getLecturerById(lecturerId);
-  if (!lecturer) redirect("/lecturer/login");
+  const lecturer = await requireLecturerAuth();
 
   const { semester: semesterParam } = await searchParams;
   const semester =
     SEMESTERS.includes(semesterParam ?? "") ? (semesterParam ?? DEFAULT_SEMESTER) : DEFAULT_SEMESTER;
 
   const [entries, venues] = await Promise.all([
-    getLecturerTimetableEntries(lecturerId, semester),
+    getLecturerTimetableEntries(lecturer.id, semester),
     listVenues(),
   ]);
 
@@ -42,11 +32,10 @@ export default async function LecturerTimetablePage({ searchParams }: LecturerTi
             {entries.length} class{entries.length !== 1 ? "es" : ""} · {semester}
           </p>
         </div>
-        <form method="get">
+        <form method="get" className="flex items-center gap-2">
           <select
             name="semester"
             defaultValue={semester}
-            onChange={(e) => (e.currentTarget.form as HTMLFormElement)?.submit()}
             className="h-9 rounded-md border border-gray-300 px-3 text-sm focus:border-(--color-brand) focus:ring-2 focus:ring-(--color-brand)/20 outline-none bg-white"
           >
             {SEMESTERS.map((s) => (
@@ -55,6 +44,12 @@ export default async function LecturerTimetablePage({ searchParams }: LecturerTi
               </option>
             ))}
           </select>
+          <button
+            type="submit"
+            className="h-9 px-3 rounded-md bg-(--color-brand) text-white text-sm font-medium hover:bg-(--color-brand-hover) transition-colors"
+          >
+            Go
+          </button>
         </form>
       </div>
 

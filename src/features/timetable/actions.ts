@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
-import { auth } from "@/lib/auth";
+import { requireAdmin } from "@/lib/auth";
 import type { ActionResult } from "@/types";
 import type { ConflictReport } from "./types";
 import { generate } from "./generator";
@@ -10,17 +10,11 @@ import { GenerateSchema, ManualAssignSchema, UpdateEntrySchema } from "./schema"
 import { checkVenueClash, checkLecturerClash, checkGroupClash, type EntryMinimal } from "./constraints";
 import { sendChangeNotification } from "@/features/notifications/trigger";
 
-async function requireAdmin(): Promise<ActionResult | null> {
-  const session = await auth();
-  if (!session) return { success: false, error: "Unauthorized" };
-  return null;
-}
-
 export async function generateTimetable(
   raw: unknown
 ): Promise<ActionResult<{ assigned: number; conflicts: ConflictReport[] }>> {
-  const session = await auth();
-  if (!session) return { success: false, error: "Unauthorized" };
+  const deny = await requireAdmin();
+  if (deny) return deny;
 
   const parsed = GenerateSchema.safeParse(raw);
   if (!parsed.success) {
@@ -103,12 +97,14 @@ export async function updateEntry(raw: unknown): Promise<ActionResult> {
   await db.timetableEntry.update({ where: { id }, data: updates });
   revalidatePath("/admin/timetable");
 
-  // Distinguish venue-only change from time change for accurate notification subject
-  const changeType = updates.slotId ? "time" : "venue";
-  const changeDetail = updates.slotId
-    ? "Your class time has been updated."
-    : "Your class venue has been updated.";
-  sendChangeNotification(id, changeType, changeDetail).catch(console.error);
+  // slotId change = time notification; venueId change = venue notification; lecturer-only = no notification
+  if (updates.slotId || updates.venueId) {
+    const changeType = updates.slotId ? "time" : "venue";
+    const changeDetail = updates.slotId
+      ? "Your class time has been updated."
+      : "Your class venue has been updated.";
+    sendChangeNotification(id, changeType, changeDetail).catch(console.error);
+  }
 
   return { success: true };
 }

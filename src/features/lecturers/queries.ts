@@ -1,7 +1,19 @@
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import type { Lecturer } from "@prisma/client";
 import type { TimetableEntryWithRelations } from "@/features/timetable/types";
 import type { LecturerWithCourses } from "./types";
+
+/** Reads lecturerId cookie, fetches lecturer, redirects to /lecturer/login if missing. */
+export async function requireLecturerAuth(): Promise<Lecturer> {
+  const cookieStore = await cookies();
+  const lecturerId = cookieStore.get("lecturerId")?.value;
+  if (!lecturerId) redirect("/lecturer/login");
+  const lecturer = await getLecturerById(lecturerId);
+  if (!lecturer) redirect("/lecturer/login");
+  return lecturer;
+}
 
 export async function listLecturers(): Promise<LecturerWithCourses[]> {
   return db.lecturer.findMany({

@@ -1,13 +1,9 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { getStudentById, getStudentCourses } from "@/features/students/queries";
+import { requireStudentAuth, getStudentCourses } from "@/features/students/queries";
 import { getStudentTimetableEntries, getTimeSlots } from "@/features/timetable/queries";
 import { planStudyTimetable } from "@/features/students/study-planner";
 import { TimetableGrid } from "@/components/timetable-grid";
 import { StudentScheduleList } from "@/components/student-schedule-list";
-
-const SEMESTERS = ["2024/2025 First", "2024/2025 Second", "2025/2026 First", "2025/2026 Second"];
-const DEFAULT_SEMESTER = "2024/2025 First";
+import { SEMESTERS, DEFAULT_SEMESTER } from "@/lib/constants";
 
 interface StudentStudyPageProps {
   searchParams: Promise<{ semester?: string }>;
@@ -16,13 +12,8 @@ interface StudentStudyPageProps {
 export const metadata = { title: "Study Plan | LAT" };
 
 export default async function StudentStudyPage({ searchParams }: StudentStudyPageProps) {
-  const cookieStore = await cookies();
-  const studentId = cookieStore.get("studentId")?.value;
-
-  if (!studentId) redirect("/student/register");
-
-  const student = await getStudentById(studentId);
-  if (!student) redirect("/student/register");
+  const student = await requireStudentAuth();
+  const studentId = student.id;
 
   const { semester: semesterParam } = await searchParams;
   const semester =

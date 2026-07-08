@@ -12,21 +12,19 @@ interface VenueChangePanelProps {
 
 export function VenueChangePanel({ entryId, currentVenueId, venues }: VenueChangePanelProps) {
   const [selectedVenueId, setSelectedVenueId] = useState(currentVenueId);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+  const [message, setMessage] = useState<{ text: string; ok: boolean } | null>(null);
   const [pending, startTransition] = useTransition();
 
   const isDirty = selectedVenueId !== currentVenueId;
 
   function handleSave() {
-    setError(null);
-    setSuccess(false);
+    setMessage(null);
     startTransition(async () => {
       const result = await changeVenue({ entryId, venueId: selectedVenueId });
       if (result.success) {
-        setSuccess(true);
+        setMessage({ text: "Updated ✓", ok: true });
       } else {
-        setError(result.error ?? "Failed to change venue");
+        setMessage({ text: result.error ?? "Failed to change venue", ok: false });
         setSelectedVenueId(currentVenueId);
       }
     });
@@ -38,8 +36,7 @@ export function VenueChangePanel({ entryId, currentVenueId, venues }: VenueChang
         value={selectedVenueId}
         onChange={(e) => {
           setSelectedVenueId(e.target.value);
-          setSuccess(false);
-          setError(null);
+          setMessage(null);
         }}
         className="h-9 rounded-md border border-gray-300 px-2 text-sm focus:border-(--color-brand) focus:ring-2 focus:ring-(--color-brand)/20 outline-none bg-white min-w-[140px]"
         disabled={pending}
@@ -59,10 +56,11 @@ export function VenueChangePanel({ entryId, currentVenueId, venues }: VenueChang
           {pending ? "Saving…" : "Change Venue"}
         </button>
       )}
-      {success && !isDirty && (
-        <span className="text-xs text-green-600 font-medium">Updated ✓</span>
+      {message && (
+        <span className={`text-xs font-medium ${message.ok ? "text-green-600" : "text-red-600"}`}>
+          {message.text}
+        </span>
       )}
-      {error && <span className="text-xs text-red-600">{error}</span>}
     </div>
   );
 }

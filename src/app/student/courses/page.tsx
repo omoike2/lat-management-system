@@ -1,23 +1,17 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { getStudentById, getRegisteredCourseIds, listCoursesForRegistration } from "@/features/students/queries";
+import { requireStudentAuth, getRegisteredCourseIds, listCoursesForRegistration } from "@/features/students/queries";
 import { CourseRegistrationForm } from "./course-registration-form";
 
 export const metadata = { title: "My Courses | LAT" };
 
 export default async function StudentCoursesPage() {
-  const cookieStore = await cookies();
-  const studentId = cookieStore.get("studentId")?.value;
-
-  if (!studentId) redirect("/student/register");
-
-  const student = await getStudentById(studentId);
-  if (!student) redirect("/student/register");
+  const student = await requireStudentAuth();
 
   const [allCourses, registeredIds] = await Promise.all([
     listCoursesForRegistration(),
-    getRegisteredCourseIds(studentId),
+    getRegisteredCourseIds(student.id),
   ]);
+
+  const registeredSet = new Set(registeredIds);
 
   // Group by department
   const byDept = allCourses.reduce<Record<string, typeof allCourses>>((acc, course) => {
@@ -42,7 +36,7 @@ export default async function StudentCoursesPage() {
             <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
               {courses.map((course) => {
                 const isOwnLevel = course.department === student.department && course.level === student.level;
-                const isRegistered = registeredIds.includes(course.id);
+                const isRegistered = registeredSet.has(course.id);
                 return (
                   <CourseRegistrationForm
                     key={course.id}
