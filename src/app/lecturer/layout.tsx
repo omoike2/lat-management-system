@@ -15,8 +15,8 @@ export default async function LecturerLayout({ children }: { children: React.Rea
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2.5">
-              <div className="flex items-center justify-center w-7 h-7">
-                <Image src="/lasu-logo.png" alt="LASU" width={28} height={28} className="object-contain" />
+              <div className="flex items-center justify-center w-8 h-8">
+                <Image src="/lasu-logo.png" alt="LASU" width={32} height={32} className="object-contain" />
               </div>
               <span className="text-sm font-semibold text-white">LAT — Lecturer</span>
             </div>

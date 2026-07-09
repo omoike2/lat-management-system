@@ -53,7 +53,7 @@ export default function LoginPage() {
         <div className="relative z-10 space-y-6">
           <h1 className="text-5xl font-bold leading-[1.1] tracking-tight">
             Conflict-free<br />scheduling,<br />
-            <span className="text-white/90">automatically.</span>
+            <span className="text-yellow-300">automatically.</span>
           </h1>
           <p className="text-base text-white/70 max-w-sm leading-relaxed">
             LAT generates optimised timetables for every department, resolves
@@ -71,7 +71,7 @@ export default function LoginPage() {
           ].map(({ icon: Icon, label }) => (
             <div key={label} className="flex items-center gap-3">
               <div className="flex-shrink-0 w-8 h-8 rounded-md bg-white/10 flex items-center justify-center">
-                <Icon className="w-4 h-4 text-white/90" />
+                <Icon className="w-4 h-4 text-yellow-300" />
               </div>
               <span className="text-sm text-white/80">{label}</span>
             </div>
