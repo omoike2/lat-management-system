@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import type { ActionResult } from "@/types";
 import { RegisterStudentSchema, CourseRegistrationSchema } from "./schema";
+import { sendWelcomeEmail, sendCourseRegistrationEmail } from "@/features/notifications/trigger";
 
 export async function registerStudent(raw: unknown): Promise<ActionResult> {
   const parsed = RegisterStudentSchema.safeParse(raw);
@@ -32,6 +33,9 @@ export async function registerStudent(raw: unknown): Promise<ActionResult> {
     maxAge: 60 * 60 * 24 * 365,
     sameSite: "lax",
   });
+
+  // Fire-and-forget — don't block registration on email delivery
+  void sendWelcomeEmail(student.name, student.email, student.department, student.level);
 
   return { success: true };
 }
@@ -64,6 +68,17 @@ export async function registerCourse(raw: unknown): Promise<ActionResult> {
 
   revalidatePath("/student/timetable");
   revalidatePath("/student/courses");
+
+  void (async () => {
+    const [student, course] = await Promise.all([
+      db.student.findUnique({ where: { id: studentId }, select: { name: true, email: true } }),
+      db.course.findUnique({ where: { id: parsed.data.courseId }, select: { code: true, title: true } }),
+    ]);
+    if (student && course) {
+      void sendCourseRegistrationEmail(student.name, student.email, course.code, course.title, "registered");
+    }
+  })();
+
   return { success: true };
 }
 
@@ -82,5 +97,16 @@ export async function unregisterCourse(raw: unknown): Promise<ActionResult> {
 
   revalidatePath("/student/timetable");
   revalidatePath("/student/courses");
+
+  void (async () => {
+    const [student, course] = await Promise.all([
+      db.student.findUnique({ where: { id: studentId }, select: { name: true, email: true } }),
+      db.course.findUnique({ where: { id: parsed.data.courseId }, select: { code: true, title: true } }),
+    ]);
+    if (student && course) {
+      void sendCourseRegistrationEmail(student.name, student.email, course.code, course.title, "unregistered");
+    }
+  })();
+
   return { success: true };
 }

@@ -1,3 +1,16 @@
+type WelcomeParams = {
+  studentName: string;
+  department: string;
+  level: number;
+};
+
+type CourseRegistrationParams = {
+  studentName: string;
+  courseCode: string;
+  courseName: string;
+  action: "registered" | "unregistered";
+};
+
 type ReminderParams = {
   studentName: string;
   courseCode: string;
@@ -30,7 +43,7 @@ function baseLayout(title: string, body: string): string {
       <td align="center">
         <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;border:1px solid #e2e8f0;overflow:hidden;max-width:560px;width:100%;">
           <tr>
-            <td style="background:#006633;padding:20px 28px;">
+            <td style="background:#0055a4;padding:20px 28px;">
               <span style="color:#ffffff;font-size:16px;font-weight:700;letter-spacing:0.5px;">LASU Academic Timetable</span>
             </td>
           </tr>
@@ -53,6 +66,55 @@ function baseLayout(title: string, body: string): string {
   </table>
 </body>
 </html>`;
+}
+
+export function welcomeEmailHtml(params: WelcomeParams): string {
+  const { studentName, department, level } = params;
+  const body = `
+    <h2 style="margin:0 0 8px;color:#0f172a;font-size:20px;font-weight:700;">Welcome to LAT</h2>
+    <p style="margin:0 0 20px;color:#64748b;font-size:14px;">Your student account has been created successfully.</p>
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;border-radius:6px;border:1px solid #e2e8f0;margin-bottom:24px;">
+      <tr><td style="padding:16px 20px;">
+        <p style="margin:0 0 12px;color:#0f172a;font-size:16px;font-weight:600;">${studentName}</p>
+        <table cellpadding="0" cellspacing="0">
+          <tr>
+            <td style="padding:3px 12px 3px 0;color:#64748b;font-size:13px;white-space:nowrap;">🏛️ Department</td>
+            <td style="padding:3px 0;color:#0f172a;font-size:13px;font-weight:500;">${department}</td>
+          </tr>
+          <tr>
+            <td style="padding:3px 12px 3px 0;color:#64748b;font-size:13px;white-space:nowrap;">📚 Level</td>
+            <td style="padding:3px 0;color:#0f172a;font-size:13px;font-weight:500;">${level} Level</td>
+          </tr>
+        </table>
+      </td></tr>
+    </table>
+    <p style="margin:0 0 24px;color:#64748b;font-size:13px;">
+      You can now view your timetable, register elective and carryover courses, and receive class reminders by email.
+    </p>`;
+  return baseLayout("Welcome to LASU Academic Timetable", body);
+}
+
+export function courseRegistrationEmailHtml(params: CourseRegistrationParams): string {
+  const { studentName, courseCode, courseName, action } = params;
+  const isRegister = action === "registered";
+  const icon = isRegister ? "✅" : "🗑️";
+  const title = isRegister ? "Course Registered" : "Course Removed";
+  const msg = isRegister
+    ? "You have successfully registered for this course. It will now appear in your personal timetable."
+    : "You have been removed from this course. It will no longer appear in your personal timetable.";
+  const bgColor = isRegister ? "#f0fdf4" : "#fef2f2";
+  const borderColor = isRegister ? "#16a34a33" : "#dc262633";
+  const body = `
+    <h2 style="margin:0 0 8px;color:#0f172a;font-size:20px;font-weight:700;">${icon} ${title}</h2>
+    <p style="margin:0 0 20px;color:#64748b;font-size:14px;">Hi ${studentName},</p>
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:${bgColor};border-radius:6px;border:1px solid ${borderColor};margin-bottom:24px;">
+      <tr><td style="padding:16px 20px;">
+        <p style="margin:0 0 4px;color:#0f172a;font-size:15px;font-weight:600;">${courseCode}</p>
+        <p style="margin:0;color:#64748b;font-size:13px;">${courseName}</p>
+      </td></tr>
+    </table>
+    <p style="margin:0 0 24px;color:#64748b;font-size:13px;">${msg}</p>`;
+  return baseLayout(`${title}: ${courseCode}`, body);
 }
 
 export function reminderEmailHtml(params: ReminderParams): string {

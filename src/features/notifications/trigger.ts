@@ -2,11 +2,43 @@
 
 import { db } from "@/lib/db";
 import { mailer } from "@/lib/mailer";
-import { reminderEmailHtml, changeEmailHtml } from "./templates";
+import { reminderEmailHtml, changeEmailHtml, welcomeEmailHtml, courseRegistrationEmailHtml } from "./templates";
 import type { ChangeType } from "@/types";
 import { DAY_LABELS } from "@/types";
 
 const FROM = `LAT System <${process.env.GMAIL_USER}>`;
+
+export async function sendWelcomeEmail(
+  studentName: string,
+  email: string,
+  department: string,
+  level: number
+): Promise<void> {
+  await mailer.sendMail({
+    from: FROM,
+    to: email,
+    subject: "Welcome to LASU Academic Timetable",
+    html: welcomeEmailHtml({ studentName, department, level }),
+  });
+}
+
+export async function sendCourseRegistrationEmail(
+  studentName: string,
+  email: string,
+  courseCode: string,
+  courseName: string,
+  action: "registered" | "unregistered"
+): Promise<void> {
+  const subject = action === "registered"
+    ? `Course Registered: ${courseCode}`
+    : `Course Removed: ${courseCode}`;
+  await mailer.sendMail({
+    from: FROM,
+    to: email,
+    subject,
+    html: courseRegistrationEmailHtml({ studentName, courseCode, courseName, action }),
+  });
+}
 
 export async function sendChangeNotification(
   entryId: string,
