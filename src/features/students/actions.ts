@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import type { ActionResult } from "@/types";
+import { z } from "zod";
 import { RegisterStudentSchema, CourseRegistrationSchema } from "./schema";
 import { sendWelcomeEmail, sendCourseRegistrationEmail } from "@/features/notifications/trigger";
 
@@ -38,6 +39,27 @@ export async function registerStudent(raw: unknown): Promise<ActionResult> {
   sendWelcomeEmail(student.name, student.email, student.department, student.level).catch(
     (err) => console.error("[email] welcome send failed:", err)
   );
+
+  return { success: true };
+}
+
+export async function loginStudent(raw: unknown): Promise<ActionResult> {
+  const parsed = z.object({ matric: z.string().min(1, "Matric number is required") }).safeParse(raw);
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.errors[0]?.message ?? "Invalid input" };
+  }
+
+  const student = await db.student.findUnique({ where: { matric: parsed.data.matric } });
+  if (!student) return { success: false, error: "No student found with that matric number" };
+
+  const cookieStore = await cookies();
+  cookieStore.set("studentId", student.id, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    path: "/student",
+    maxAge: 60 * 60 * 24 * 365,
+    sameSite: "lax",
+  });
 
   return { success: true };
 }
