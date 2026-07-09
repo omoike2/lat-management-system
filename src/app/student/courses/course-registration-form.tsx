@@ -45,7 +45,7 @@ export function CourseRegistrationForm({
         className="mt-0.5 h-4 w-4 rounded border-gray-300 accent-(--color-brand) disabled:opacity-60 flex-shrink-0"
       />
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-medium text-gray-900 truncate">{label}</p>
+        <p className="text-sm font-medium text-gray-900 leading-snug">{label}</p>
         <p className="text-xs text-gray-500 mt-0.5">
           {sublabel}
           {isOwnLevel && <span className="ml-1 text-(--color-brand)">(your level)</span>}

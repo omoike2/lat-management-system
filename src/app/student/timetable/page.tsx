@@ -25,7 +25,7 @@ export default async function StudentTimetablePage({ searchParams }: StudentTime
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Semester selector */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
         <div>
           <h1 className="text-2xl font-semibold text-gray-900">My Timetable</h1>
           <p className="text-sm text-gray-500 mt-0.5">
@@ -36,7 +36,7 @@ export default async function StudentTimetablePage({ searchParams }: StudentTime
           <select
             name="semester"
             defaultValue={semester}
-            className="h-9 rounded-md border border-gray-300 px-3 text-sm focus:border-(--color-brand) focus:ring-2 focus:ring-(--color-brand)/20 outline-none bg-white"
+            className="flex-1 sm:flex-none h-10 rounded-md border border-gray-300 px-3 text-sm focus:border-(--color-brand) focus:ring-2 focus:ring-(--color-brand)/20 outline-none bg-white"
           >
             {SEMESTERS.map((s) => (
               <option key={s} value={s}>
@@ -46,7 +46,7 @@ export default async function StudentTimetablePage({ searchParams }: StudentTime
           </select>
           <button
             type="submit"
-            className="h-9 px-3 rounded-md bg-(--color-brand) text-white text-sm font-medium hover:bg-(--color-brand-hover) transition-colors"
+            className="h-10 px-4 rounded-md bg-(--color-brand) text-white text-sm font-medium hover:bg-(--color-brand-hover) transition-colors flex-shrink-0"
           >
             Go
           </button>
