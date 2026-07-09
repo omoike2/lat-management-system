@@ -49,8 +49,9 @@ export async function loginStudent(raw: unknown): Promise<ActionResult> {
     return { success: false, error: parsed.error.errors[0]?.message ?? "Invalid input" };
   }
 
+  // TODO: upgrade to email OTP — matric alone is a weak factor; low risk (data = timetable only)
   const student = await db.student.findUnique({ where: { matric: parsed.data.matric } });
-  if (!student) return { success: false, error: "No student found with that matric number" };
+  if (!student) return { success: false, error: "Invalid matric number" };
 
   const cookieStore = await cookies();
   cookieStore.set("studentId", student.id, {
