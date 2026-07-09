@@ -144,9 +144,23 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <p className="mt-8 text-xs text-gray-400 text-center">
-            Lagos State University &middot; Academic Timetable System
-          </p>
+          <div className="mt-8 pt-6 border-t border-gray-100 space-y-2">
+            <p className="text-xs text-gray-400 text-center mb-3">Not an admin?</p>
+            <a
+              href="/student/register"
+              className="flex items-center justify-between w-full px-4 py-2.5 rounded-md border border-gray-200 hover:border-(--color-brand) hover:bg-(--color-brand)/5 transition-colors group"
+            >
+              <span className="text-sm font-medium text-gray-700 group-hover:text-(--color-brand)">Student</span>
+              <span className="text-xs text-gray-400 group-hover:text-(--color-brand)">Register / view timetable →</span>
+            </a>
+            <a
+              href="/lecturer/login"
+              className="flex items-center justify-between w-full px-4 py-2.5 rounded-md border border-gray-200 hover:border-(--color-brand) hover:bg-(--color-brand)/5 transition-colors group"
+            >
+              <span className="text-sm font-medium text-gray-700 group-hover:text-(--color-brand)">Lecturer</span>
+              <span className="text-xs text-gray-400 group-hover:text-(--color-brand)">Sign in to your portal →</span>
+            </a>
+          </div>
         </div>
       </div>
     </div>
