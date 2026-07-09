@@ -44,8 +44,8 @@ export function AdminShell({ email, children }: AdminShellProps) {
             <Menu size={20} />
           </button>
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-md bg-white flex items-center justify-center overflow-hidden">
-              <Image src="/lasu-logo.png" alt="LASU" width={24} height={24} className="object-contain" />
+            <div className="w-7 h-7 flex items-center justify-center">
+              <Image src="/lasu-logo.png" alt="LASU" width={28} height={28} className="object-contain" />
             </div>
             <span className="font-semibold text-sm text-white">LAT System</span>
           </div>

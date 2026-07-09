@@ -41,8 +41,8 @@ export default function LoginPage() {
 
         {/* Logo */}
         <div className="relative z-10 flex items-center gap-3">
-          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-white overflow-hidden">
-            <Image src="/lasu-logo.png" alt="LASU" width={36} height={36} className="object-contain" />
+          <div className="flex items-center justify-center w-10 h-10">
+            <Image src="/lasu-logo.png" alt="LASU" width={40} height={40} className="object-contain" />
           </div>
           <span className="text-sm font-semibold tracking-wide uppercase opacity-90">
             LASU — Academic Timetable
@@ -83,8 +83,8 @@ export default function LoginPage() {
       <div className="flex flex-col justify-center px-6 sm:px-12 lg:px-16 py-14 bg-white">
         {/* Mobile logo */}
         <div className="lg:hidden flex items-center gap-3 mb-10">
-          <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-white border border-gray-100 overflow-hidden">
-            <Image src="/lasu-logo.png" alt="LASU" width={32} height={32} className="object-contain" />
+          <div className="flex items-center justify-center w-9 h-9">
+            <Image src="/lasu-logo.png" alt="LASU" width={36} height={36} className="object-contain" />
           </div>
           <span className="text-sm font-semibold text-gray-600 tracking-wide uppercase">
             LASU — Academic Timetable
