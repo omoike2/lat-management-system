@@ -35,7 +35,9 @@ export async function registerStudent(raw: unknown): Promise<ActionResult> {
   });
 
   // Fire-and-forget — don't block registration on email delivery
-  void sendWelcomeEmail(student.name, student.email, student.department, student.level);
+  sendWelcomeEmail(student.name, student.email, student.department, student.level).catch(
+    (err) => console.error("[email] welcome send failed:", err)
+  );
 
   return { success: true };
 }
@@ -69,15 +71,15 @@ export async function registerCourse(raw: unknown): Promise<ActionResult> {
   revalidatePath("/student/timetable");
   revalidatePath("/student/courses");
 
-  void (async () => {
+  (async () => {
     const [student, course] = await Promise.all([
       db.student.findUnique({ where: { id: studentId }, select: { name: true, email: true } }),
       db.course.findUnique({ where: { id: parsed.data.courseId }, select: { code: true, title: true } }),
     ]);
     if (student && course) {
-      void sendCourseRegistrationEmail(student.name, student.email, course.code, course.title, "registered");
+      await sendCourseRegistrationEmail(student.name, student.email, course.code, course.title, "registered");
     }
-  })();
+  })().catch((err) => console.error("[email] course register send failed:", err));
 
   return { success: true };
 }
@@ -98,15 +100,15 @@ export async function unregisterCourse(raw: unknown): Promise<ActionResult> {
   revalidatePath("/student/timetable");
   revalidatePath("/student/courses");
 
-  void (async () => {
+  (async () => {
     const [student, course] = await Promise.all([
       db.student.findUnique({ where: { id: studentId }, select: { name: true, email: true } }),
       db.course.findUnique({ where: { id: parsed.data.courseId }, select: { code: true, title: true } }),
     ]);
     if (student && course) {
-      void sendCourseRegistrationEmail(student.name, student.email, course.code, course.title, "unregistered");
+      await sendCourseRegistrationEmail(student.name, student.email, course.code, course.title, "unregistered");
     }
-  })();
+  })().catch((err) => console.error("[email] course unregister send failed:", err));
 
   return { success: true };
 }
