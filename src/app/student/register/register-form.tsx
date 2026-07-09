@@ -97,7 +97,7 @@ export function RegisterForm({ departments }: RegisterFormProps) {
               type="text"
               required
               autoComplete="name"
-              className="w-full h-10 rounded-md border border-gray-300 px-3 text-sm placeholder:text-gray-400 focus:border-(--color-brand) focus:ring-2 focus:ring-(--color-brand)/20 outline-none transition"
+              className="w-full h-11 rounded-md border border-gray-300 px-3 text-sm placeholder:text-gray-400 focus:border-(--color-brand) focus:ring-2 focus:ring-(--color-brand)/20 outline-none transition"
             />
           </div>
 
@@ -111,7 +111,7 @@ export function RegisterForm({ departments }: RegisterFormProps) {
               type="email"
               required
               autoComplete="email"
-              className="w-full h-10 rounded-md border border-gray-300 px-3 text-sm placeholder:text-gray-400 focus:border-(--color-brand) focus:ring-2 focus:ring-(--color-brand)/20 outline-none transition"
+              className="w-full h-11 rounded-md border border-gray-300 px-3 text-sm placeholder:text-gray-400 focus:border-(--color-brand) focus:ring-2 focus:ring-(--color-brand)/20 outline-none transition"
             />
           </div>
 
@@ -125,11 +125,11 @@ export function RegisterForm({ departments }: RegisterFormProps) {
               type="text"
               required
               placeholder="e.g. 190601001"
-              className="w-full h-10 rounded-md border border-gray-300 px-3 text-sm placeholder:text-gray-400 focus:border-(--color-brand) focus:ring-2 focus:ring-(--color-brand)/20 outline-none transition"
+              className="w-full h-11 rounded-md border border-gray-300 px-3 text-sm placeholder:text-gray-400 focus:border-(--color-brand) focus:ring-2 focus:ring-(--color-brand)/20 outline-none transition"
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <label htmlFor="department" className="block text-sm font-medium text-gray-700">
                 Department
@@ -138,7 +138,7 @@ export function RegisterForm({ departments }: RegisterFormProps) {
                 id="department"
                 name="department"
                 required
-                className="w-full h-10 rounded-md border border-gray-300 px-3 text-sm focus:border-(--color-brand) focus:ring-2 focus:ring-(--color-brand)/20 outline-none transition bg-white"
+                className="w-full h-11 rounded-md border border-gray-300 px-3 text-sm focus:border-(--color-brand) focus:ring-2 focus:ring-(--color-brand)/20 outline-none transition bg-white"
               >
                 <option value="">Select…</option>
                 {departments.map((dept) => (
@@ -157,7 +157,7 @@ export function RegisterForm({ departments }: RegisterFormProps) {
                 id="level"
                 name="level"
                 required
-                className="w-full h-10 rounded-md border border-gray-300 px-3 text-sm focus:border-(--color-brand) focus:ring-2 focus:ring-(--color-brand)/20 outline-none transition bg-white"
+                className="w-full h-11 rounded-md border border-gray-300 px-3 text-sm focus:border-(--color-brand) focus:ring-2 focus:ring-(--color-brand)/20 outline-none transition bg-white"
               >
                 <option value="">Select…</option>
                 {LEVELS.map((lvl) => (
@@ -179,7 +179,7 @@ export function RegisterForm({ departments }: RegisterFormProps) {
           <button
             type="submit"
             disabled={isPending}
-            className="w-full h-10 rounded-md bg-(--color-brand) text-white text-sm font-medium hover:bg-(--color-brand-hover) disabled:opacity-60 transition-colors"
+            className="w-full h-11 rounded-md bg-(--color-brand) text-white text-sm font-medium hover:bg-(--color-brand-hover) disabled:opacity-60 transition-colors"
           >
             {isPending ? "Registering…" : "Register"}
           </button>
@@ -197,7 +197,7 @@ export function RegisterForm({ departments }: RegisterFormProps) {
               required
               autoComplete="off"
               placeholder="e.g. 190601001"
-              className="w-full h-10 rounded-md border border-gray-300 px-3 text-sm placeholder:text-gray-400 focus:border-(--color-brand) focus:ring-2 focus:ring-(--color-brand)/20 outline-none transition"
+              className="w-full h-11 rounded-md border border-gray-300 px-3 text-sm placeholder:text-gray-400 focus:border-(--color-brand) focus:ring-2 focus:ring-(--color-brand)/20 outline-none transition"
             />
           </div>
 
@@ -211,7 +211,7 @@ export function RegisterForm({ departments }: RegisterFormProps) {
           <button
             type="submit"
             disabled={isPending}
-            className="w-full h-10 rounded-md bg-(--color-brand) text-white text-sm font-medium hover:bg-(--color-brand-hover) disabled:opacity-60 transition-colors"
+            className="w-full h-11 rounded-md bg-(--color-brand) text-white text-sm font-medium hover:bg-(--color-brand-hover) disabled:opacity-60 transition-colors"
           >
             {isPending ? "Signing in…" : "Sign in"}
           </button>

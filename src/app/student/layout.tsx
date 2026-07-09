@@ -3,6 +3,7 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { getStudentById } from "@/features/students/queries";
 import { logoutStudent } from "@/features/students/actions";
+import { StudentMobileNav } from "./mobile-nav";
 
 export default async function StudentLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
@@ -61,7 +62,8 @@ export default async function StudentLayout({ children }: { children: React.Reac
           )}
         </div>
       </header>
-      <main>{children}</main>
+      <main className="pb-16 sm:pb-0">{children}</main>
+      {student && <StudentMobileNav />}
     </div>
   );
 }

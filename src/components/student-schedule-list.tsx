@@ -42,15 +42,16 @@ export function StudentScheduleList({ entries }: StudentScheduleListProps) {
                   key={entry.id}
                   className="bg-white rounded-lg border border-gray-200 px-4 py-3 flex items-start gap-3"
                 >
-                  <div className="text-xs text-gray-400 whitespace-nowrap pt-0.5 w-20 flex-shrink-0">
-                    {formatTime(entry.slot.startTime)}–{formatTime(entry.slot.endTime)}
+                  <div className="text-xs font-medium text-gray-500 whitespace-nowrap pt-0.5 w-[4.5rem] flex-shrink-0 leading-tight">
+                    <span className="block">{formatTime(entry.slot.startTime)}</span>
+                    <span className="block text-gray-400">{formatTime(entry.slot.endTime)}</span>
                   </div>
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <p className="text-sm font-semibold text-gray-900">
                       {entry.course.code}
                     </p>
-                    <p className="text-xs text-gray-600 truncate">{entry.course.title}</p>
-                    <p className="text-xs text-gray-400 mt-0.5">
+                    <p className="text-xs text-gray-600 mt-0.5 line-clamp-1">{entry.course.title}</p>
+                    <p className="text-xs text-gray-500 mt-0.5">
                       {entry.venue.name} · {entry.lecturer.name}
                     </p>
                   </div>

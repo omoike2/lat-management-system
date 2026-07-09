@@ -38,7 +38,7 @@ export function LecturerLoginForm() {
           type="email"
           required
           autoComplete="email"
-          className="w-full h-9 rounded-md border border-gray-300 px-3 text-sm focus:border-(--color-brand) focus:ring-2 focus:ring-(--color-brand)/20 outline-none"
+          className="w-full h-11 rounded-md border border-gray-300 px-3 text-sm focus:border-(--color-brand) focus:ring-2 focus:ring-(--color-brand)/20 outline-none"
         />
       </div>
       <div>
@@ -51,14 +51,14 @@ export function LecturerLoginForm() {
           type="password"
           required
           autoComplete="current-password"
-          className="w-full h-9 rounded-md border border-gray-300 px-3 text-sm focus:border-(--color-brand) focus:ring-2 focus:ring-(--color-brand)/20 outline-none"
+          className="w-full h-11 rounded-md border border-gray-300 px-3 text-sm focus:border-(--color-brand) focus:ring-2 focus:ring-(--color-brand)/20 outline-none"
         />
       </div>
       {error && <p className="text-xs text-red-600">{error}</p>}
       <button
         type="submit"
         disabled={pending}
-        className="w-full h-9 rounded-md bg-(--color-brand) text-white text-sm font-medium hover:bg-(--color-brand-hover) transition-colors disabled:opacity-60"
+        className="w-full h-11 rounded-md bg-(--color-brand) text-white text-sm font-medium hover:bg-(--color-brand-hover) transition-colors disabled:opacity-60"
       >
         {pending ? "Signing in…" : "Sign in"}
       </button>

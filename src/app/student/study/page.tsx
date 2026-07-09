@@ -4,6 +4,8 @@ import { planStudyTimetable } from "@/features/students/study-planner";
 import { TimetableGrid } from "@/components/timetable-grid";
 import { StudentScheduleList } from "@/components/student-schedule-list";
 import { SEMESTERS, DEFAULT_SEMESTER } from "@/lib/constants";
+import { DAY_LABELS } from "@/types";
+import { formatTime } from "@/lib/utils";
 
 interface StudentStudyPageProps {
   searchParams: Promise<{ semester?: string }>;
@@ -100,9 +102,11 @@ export default async function StudentStudyPage({ searchParams }: StudentStudyPag
                 <ul className="space-y-1">
                   {studyBlocks.map((b) => {
                     const slot = allSlots.find((s) => s.id === b.slotId);
+                    const dayLabel = slot ? (DAY_LABELS[slot.dayOfWeek] ?? "") : "";
+                    const timeLabel = slot ? formatTime(slot.startTime) : b.slotId;
                     return (
                       <li key={`${b.courseId}-${b.slotId}`} className="text-xs text-amber-700">
-                        {b.courseCode} — slot {slot?.startTime ?? b.slotId}
+                        {b.courseCode} — {dayLabel} {timeLabel}
                       </li>
                     );
                   })}

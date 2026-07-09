@@ -109,7 +109,7 @@ export default function LoginPage() {
                 required
                 autoComplete="email"
                 placeholder="admin@lasu.edu.ng"
-                className="w-full h-10 rounded-md border border-gray-300 px-3 text-sm placeholder:text-gray-400 focus:border-(--color-brand) focus:ring-2 focus:ring-(--color-brand)/20 outline-none transition"
+                className="w-full h-11 rounded-md border border-gray-300 px-3 text-sm placeholder:text-gray-400 focus:border-(--color-brand) focus:ring-2 focus:ring-(--color-brand)/20 outline-none transition"
               />
             </div>
 
@@ -124,7 +124,7 @@ export default function LoginPage() {
                 required
                 autoComplete="current-password"
                 placeholder="••••••••"
-                className="w-full h-10 rounded-md border border-gray-300 px-3 text-sm placeholder:text-gray-400 focus:border-(--color-brand) focus:ring-2 focus:ring-(--color-brand)/20 outline-none transition"
+                className="w-full h-11 rounded-md border border-gray-300 px-3 text-sm placeholder:text-gray-400 focus:border-(--color-brand) focus:ring-2 focus:ring-(--color-brand)/20 outline-none transition"
               />
             </div>
 
@@ -138,7 +138,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isPending}
-              className="w-full h-10 rounded-md bg-(--color-brand) text-white text-sm font-medium hover:bg-(--color-brand-hover) disabled:opacity-60 transition-colors mt-1"
+              className="w-full h-11 rounded-md bg-(--color-brand) text-white text-sm font-medium hover:bg-(--color-brand-hover) disabled:opacity-60 transition-colors mt-1"
             >
               {isPending ? "Signing in…" : "Sign in"}
             </button>

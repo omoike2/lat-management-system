@@ -60,7 +60,7 @@ export function AdminShell({ email, children }: AdminShellProps) {
       {sidebarOpen && (
         <button
           onClick={() => setSidebarOpen(false)}
-          className="fixed top-3 left-[13.5rem] z-40 flex items-center justify-center w-8 h-8 rounded-md bg-white border border-(--color-border) text-(--color-text-secondary) md:hidden"
+          className="fixed top-2 left-[13rem] z-40 flex items-center justify-center w-11 h-11 rounded-md bg-white border border-(--color-border) text-(--color-text-secondary) md:hidden"
           aria-label="Close menu"
         >
           <X size={16} />
