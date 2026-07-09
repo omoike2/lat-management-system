@@ -29,13 +29,23 @@ type ChangeParams = {
   details: string;
 };
 
+function esc(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 function baseLayout(title: string, body: string): string {
+  const safeTitle = esc(title);
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>${title}</title>
+  <title>${safeTitle}</title>
 </head>
 <body style="margin:0;padding:0;background:#f8fafc;font-family:'Segoe UI',Arial,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;padding:32px 16px;">
@@ -69,17 +79,19 @@ function baseLayout(title: string, body: string): string {
 }
 
 export function welcomeEmailHtml(params: WelcomeParams): string {
-  const { studentName, department, level } = params;
+  const name = esc(params.studentName);
+  const dept = esc(params.department);
+  const level = params.level; // number — no escaping needed
   const body = `
     <h2 style="margin:0 0 8px;color:#0f172a;font-size:20px;font-weight:700;">Welcome to LAT</h2>
     <p style="margin:0 0 20px;color:#64748b;font-size:14px;">Your student account has been created successfully.</p>
     <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;border-radius:6px;border:1px solid #e2e8f0;margin-bottom:24px;">
       <tr><td style="padding:16px 20px;">
-        <p style="margin:0 0 12px;color:#0f172a;font-size:16px;font-weight:600;">${studentName}</p>
+        <p style="margin:0 0 12px;color:#0f172a;font-size:16px;font-weight:600;">${name}</p>
         <table cellpadding="0" cellspacing="0">
           <tr>
             <td style="padding:3px 12px 3px 0;color:#64748b;font-size:13px;white-space:nowrap;">🏛️ Department</td>
-            <td style="padding:3px 0;color:#0f172a;font-size:13px;font-weight:500;">${department}</td>
+            <td style="padding:3px 0;color:#0f172a;font-size:13px;font-weight:500;">${dept}</td>
           </tr>
           <tr>
             <td style="padding:3px 12px 3px 0;color:#64748b;font-size:13px;white-space:nowrap;">📚 Level</td>
@@ -95,7 +107,10 @@ export function welcomeEmailHtml(params: WelcomeParams): string {
 }
 
 export function courseRegistrationEmailHtml(params: CourseRegistrationParams): string {
-  const { studentName, courseCode, courseName, action } = params;
+  const name = esc(params.studentName);
+  const code = esc(params.courseCode);
+  const courseName = esc(params.courseName);
+  const { action } = params;
   const isRegister = action === "registered";
   const icon = isRegister ? "✅" : "🗑️";
   const title = isRegister ? "Course Registered" : "Course Removed";
@@ -106,25 +121,31 @@ export function courseRegistrationEmailHtml(params: CourseRegistrationParams): s
   const borderColor = isRegister ? "#16a34a33" : "#dc262633";
   const body = `
     <h2 style="margin:0 0 8px;color:#0f172a;font-size:20px;font-weight:700;">${icon} ${title}</h2>
-    <p style="margin:0 0 20px;color:#64748b;font-size:14px;">Hi ${studentName},</p>
+    <p style="margin:0 0 20px;color:#64748b;font-size:14px;">Hi ${name},</p>
     <table width="100%" cellpadding="0" cellspacing="0" style="background:${bgColor};border-radius:6px;border:1px solid ${borderColor};margin-bottom:24px;">
       <tr><td style="padding:16px 20px;">
-        <p style="margin:0 0 4px;color:#0f172a;font-size:15px;font-weight:600;">${courseCode}</p>
+        <p style="margin:0 0 4px;color:#0f172a;font-size:15px;font-weight:600;">${code}</p>
         <p style="margin:0;color:#64748b;font-size:13px;">${courseName}</p>
       </td></tr>
     </table>
     <p style="margin:0 0 24px;color:#64748b;font-size:13px;">${msg}</p>`;
-  return baseLayout(`${title}: ${courseCode}`, body);
+  return baseLayout(`${title}: ${code}`, body);
 }
 
 export function reminderEmailHtml(params: ReminderParams): string {
-  const { studentName, courseCode, courseName, venueName, lecturerName, startTime, day } = params;
+  const name = esc(params.studentName);
+  const code = esc(params.courseCode);
+  const courseName = esc(params.courseName);
+  const venue = esc(params.venueName);
+  const lecturer = esc(params.lecturerName);
+  const startTime = esc(params.startTime);
+  const day = esc(params.day);
   const body = `
     <h2 style="margin:0 0 8px;color:#0f172a;font-size:20px;font-weight:700;">Class Reminder</h2>
     <p style="margin:0 0 20px;color:#64748b;font-size:14px;">You have an upcoming class in <strong>30 minutes</strong>.</p>
     <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;border-radius:6px;border:1px solid #e2e8f0;margin-bottom:24px;">
       <tr><td style="padding:16px 20px;">
-        <p style="margin:0 0 12px;color:#0f172a;font-size:16px;font-weight:600;">${courseCode} &mdash; ${courseName}</p>
+        <p style="margin:0 0 12px;color:#0f172a;font-size:16px;font-weight:600;">${code} &mdash; ${courseName}</p>
         <table cellpadding="0" cellspacing="0">
           <tr>
             <td style="padding:3px 12px 3px 0;color:#64748b;font-size:13px;white-space:nowrap;">📅 Day</td>
@@ -136,21 +157,25 @@ export function reminderEmailHtml(params: ReminderParams): string {
           </tr>
           <tr>
             <td style="padding:3px 12px 3px 0;color:#64748b;font-size:13px;white-space:nowrap;">📍 Venue</td>
-            <td style="padding:3px 0;color:#0f172a;font-size:13px;font-weight:500;">${venueName}</td>
+            <td style="padding:3px 0;color:#0f172a;font-size:13px;font-weight:500;">${venue}</td>
           </tr>
           <tr>
             <td style="padding:3px 12px 3px 0;color:#64748b;font-size:13px;white-space:nowrap;">👤 Lecturer</td>
-            <td style="padding:3px 0;color:#0f172a;font-size:13px;font-weight:500;">${lecturerName}</td>
+            <td style="padding:3px 0;color:#0f172a;font-size:13px;font-weight:500;">${lecturer}</td>
           </tr>
         </table>
       </td></tr>
     </table>
-    <p style="margin:0 0 24px;color:#64748b;font-size:13px;">Hi ${studentName}, please ensure you arrive on time.</p>`;
-  return baseLayout(`Class Reminder: ${courseCode}`, body);
+    <p style="margin:0 0 24px;color:#64748b;font-size:13px;">Hi ${name}, please ensure you arrive on time.</p>`;
+  return baseLayout(`Class Reminder: ${code}`, body);
 }
 
 export function changeEmailHtml(params: ChangeParams): string {
-  const { studentName, courseCode, courseName, changeType, details } = params;
+  const name = esc(params.studentName);
+  const code = esc(params.courseCode);
+  const courseName = esc(params.courseName);
+  const details = esc(params.details);
+  const { changeType } = params;
   const titles: Record<typeof changeType, string> = {
     venue: "Venue Change",
     time: "Schedule Change",
@@ -166,15 +191,15 @@ export function changeEmailHtml(params: ChangeParams): string {
   const icon = icons[changeType];
   const body = `
     <h2 style="margin:0 0 8px;color:#0f172a;font-size:20px;font-weight:700;">${icon} ${title}</h2>
-    <p style="margin:0 0 20px;color:#64748b;font-size:14px;">Hi ${studentName}, there has been a change to one of your classes.</p>
+    <p style="margin:0 0 20px;color:#64748b;font-size:14px;">Hi ${name}, there has been a change to one of your classes.</p>
     <table width="100%" cellpadding="0" cellspacing="0" style="background:#fff7ed;border-radius:6px;border:1px solid ${alertColor}33;margin-bottom:24px;">
       <tr><td style="padding:16px 20px;">
-        <p style="margin:0 0 8px;color:#0f172a;font-size:15px;font-weight:600;">${courseCode} &mdash; ${courseName}</p>
+        <p style="margin:0 0 8px;color:#0f172a;font-size:15px;font-weight:600;">${code} &mdash; ${courseName}</p>
         <p style="margin:0;color:#64748b;font-size:13px;">${details}</p>
       </td></tr>
     </table>
     <p style="margin:0 0 24px;color:#64748b;font-size:13px;">
       Please check the timetable system for the most up-to-date information.
     </p>`;
-  return baseLayout(`${title}: ${courseCode}`, body);
+  return baseLayout(`${title}: ${code}`, body);
 }
