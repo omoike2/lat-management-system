@@ -5,6 +5,7 @@
 | Event | Trigger | Recipients | Transport |
 |---|---|---|---|
 | **Welcome** | Student registers at `/student/register` | The new student | Gmail SMTP |
+| **Login notification** | Student signs in via "Already registered" | The student | Gmail SMTP |
 | **Course registered** | Student adds elective/carryover course | The student | Gmail SMTP |
 | **Course removed** | Student removes a registered course | The student | Gmail SMTP |
 | **30-min class reminder** | cron every 5 min → `POST /api/cron/notify` | Students matching entry course's `dept + level` | Gmail SMTP |
@@ -17,6 +18,10 @@
 ```
 students/actions.ts: registerStudent
   → sendWelcomeEmail(name, email, department, level)   ← fire-and-forget
+      └── mailer.sendMail × 1
+
+students/actions.ts: loginStudent
+  → sendLoginNotificationEmail(name, email)            ← fire-and-forget
       └── mailer.sendMail × 1
 
 students/actions.ts: registerCourse / unregisterCourse
@@ -54,6 +59,7 @@ All in `src/features/notifications/templates.ts`:
 | Function | Email subject |
 |---|---|
 | `welcomeEmailHtml` | "Welcome to LASU Academic Timetable" |
+| `loginNotificationEmailHtml` | "New sign-in to your LAT account" |
 | `courseRegistrationEmailHtml` | "Course Registered: …" / "Course Removed: …" |
 | `reminderEmailHtml` | "Class Reminder: …" |
 | `changeEmailHtml` | "Venue Change / Schedule Change / Class Cancelled: …" |
@@ -80,6 +86,16 @@ Run dev server: `pnpm dev`
 1. Go to `http://localhost:3000/student/register`
 2. Register a new student — use **your real email** in the email field
 3. Submit → welcome email arrives within seconds
+
+---
+
+### Login notification email
+
+1. Register a student (or use an existing one)
+2. Sign out
+3. Go to `http://localhost:3000/student/register` → click **Already registered**
+4. Enter your matric number → **Sign in**
+5. Email arrives: "New sign-in to your LAT account"
 
 ---
 
