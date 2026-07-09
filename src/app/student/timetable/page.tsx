@@ -24,22 +24,6 @@ export default async function StudentTimetablePage({ searchParams }: StudentTime
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Student info card */}
-      <div className="bg-(--color-brand) rounded-xl p-4 mb-6 flex flex-wrap items-center gap-4">
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-white">{student.name}</p>
-          <p className="text-xs text-white/60 mt-0.5">
-            {student.department} · Level {student.level}
-          </p>
-        </div>
-        <a
-          href="/student/register"
-          className="text-xs text-white/50 hover:text-white/80 underline underline-offset-2 transition-colors"
-        >
-          Switch account
-        </a>
-      </div>
-
       {/* Semester selector */}
       <div className="flex items-center justify-between mb-4">
         <div>

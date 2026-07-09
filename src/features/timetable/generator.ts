@@ -49,6 +49,8 @@ export function generate(
 
   const assigned: EntryMinimal[] = [...existingEntries];
   const result: GenerationResult = { entries: [], conflicts: [] };
+  // Track how many entries each venue has been assigned — prefer least-loaded
+  const venueLoad = new Map<string, number>(sortedVenues.map((v) => [v.id, 0]));
 
   for (const course of sorted) {
     const lecturerIds = course.lecturers.map((lc) => lc.lecturer.id);
@@ -84,8 +86,12 @@ export function generate(
 
       if (lecturerClash || groupClash) continue;
 
-      const venue = sortedVenues.find((v) => !venueClash(v.id));
+      // Pick the least-loaded venue with no clash; capacity order breaks ties
+      const venue = sortedVenues
+        .filter((v) => !venueClash(v.id))
+        .sort((a, b) => venueLoad.get(a.id)! - venueLoad.get(b.id)!)[0];
       if (!venue) continue;
+      venueLoad.set(venue.id, venueLoad.get(venue.id)! + 1);
 
       const entry: EntryMinimal = {
         courseId: course.id,

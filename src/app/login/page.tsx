@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useTransition } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -40,8 +41,8 @@ export default function LoginPage() {
 
         {/* Logo */}
         <div className="relative z-10 flex items-center gap-3">
-          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-white/15 border border-white/20">
-            <span className="font-bold text-lg leading-none">L</span>
+          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-white overflow-hidden">
+            <Image src="/lasu-logo.png" alt="LASU" width={36} height={36} className="object-contain" />
           </div>
           <span className="text-sm font-semibold tracking-wide uppercase opacity-90">
             LASU — Academic Timetable
@@ -52,7 +53,7 @@ export default function LoginPage() {
         <div className="relative z-10 space-y-6">
           <h1 className="text-5xl font-bold leading-[1.1] tracking-tight">
             Conflict-free<br />scheduling,<br />
-            <span className="text-green-200">automatically.</span>
+            <span className="text-white/90">automatically.</span>
           </h1>
           <p className="text-base text-white/70 max-w-sm leading-relaxed">
             LAT generates optimised timetables for every department, resolves
@@ -70,7 +71,7 @@ export default function LoginPage() {
           ].map(({ icon: Icon, label }) => (
             <div key={label} className="flex items-center gap-3">
               <div className="flex-shrink-0 w-8 h-8 rounded-md bg-white/10 flex items-center justify-center">
-                <Icon className="w-4 h-4 text-green-200" />
+                <Icon className="w-4 h-4 text-white/90" />
               </div>
               <span className="text-sm text-white/80">{label}</span>
             </div>
@@ -82,8 +83,8 @@ export default function LoginPage() {
       <div className="flex flex-col justify-center px-6 sm:px-12 lg:px-16 py-14 bg-white">
         {/* Mobile logo */}
         <div className="lg:hidden flex items-center gap-3 mb-10">
-          <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-(--color-brand)">
-            <span className="font-bold text-white text-base leading-none">L</span>
+          <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-white border border-gray-100 overflow-hidden">
+            <Image src="/lasu-logo.png" alt="LASU" width={32} height={32} className="object-contain" />
           </div>
           <span className="text-sm font-semibold text-gray-600 tracking-wide uppercase">
             LASU — Academic Timetable

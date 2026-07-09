@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import AdminSidebar from "./sidebar";
@@ -43,8 +44,8 @@ export function AdminShell({ email, children }: AdminShellProps) {
             <Menu size={20} />
           </button>
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-md bg-white/15 border border-white/25 flex items-center justify-center">
-              <span className="text-white text-xs font-bold leading-none">L</span>
+            <div className="w-7 h-7 rounded-md bg-white flex items-center justify-center overflow-hidden">
+              <Image src="/lasu-logo.png" alt="LASU" width={24} height={24} className="object-contain" />
             </div>
             <span className="font-semibold text-sm text-white">LAT System</span>
           </div>

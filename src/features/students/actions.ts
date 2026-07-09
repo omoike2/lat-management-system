@@ -1,6 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import type { ActionResult } from "@/types";
@@ -33,6 +34,12 @@ export async function registerStudent(raw: unknown): Promise<ActionResult> {
   });
 
   return { success: true };
+}
+
+export async function logoutStudent(): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.delete({ name: "studentId", path: "/student" });
+  redirect("/student/register");
 }
 
 async function getStudentId(): Promise<string | null> {

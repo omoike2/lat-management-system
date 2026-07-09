@@ -32,7 +32,7 @@ export function TimetableGrid({ entries, slots, mode, studyBlocks, onCellClick }
   const depts = [...new Set(entries.map((e) => e.course.department))].sort();
   const deptColorIndex = (dept: string) => depts.indexOf(dept) % DEPT_COLORS.length;
 
-  // Unique period times (rows), sorted
+  // Unique period times (columns), sorted
   const periodTimes = [...new Set(slots.map((s) => s.startTime))].sort();
 
   // Slot lookup: `${dayOfWeek}-${startTime}` → TimeSlot
@@ -52,139 +52,150 @@ export function TimetableGrid({ entries, slots, mode, studyBlocks, onCellClick }
     studyMap.set(block.slotId, block);
   }
 
+  // Dynamic column template: day-label column + one column per time period
+  const gridCols = `110px repeat(${periodTimes.length}, minmax(120px, 1fr))`;
+
+  // Check if a period has all unavailable slots (lunch break column)
+  const isBreakPeriod = (time: string) => {
+    const periodSlots = slots.filter((s) => s.startTime === time);
+    return periodSlots.length > 0 && periodSlots.every((s) => !s.available);
+  };
+
   return (
     <div className="overflow-x-auto">
-      <div className="min-w-[700px]">
-        {/* Header row */}
-        <div className="grid grid-cols-[80px_repeat(5,1fr)] mb-1">
+      <div style={{ minWidth: `${110 + periodTimes.length * 120}px` }}>
+        {/* Header row — time labels across the top */}
+        <div className="grid mb-1" style={{ gridTemplateColumns: gridCols }}>
           <div />
-          {DAY_LABELS.map((day) => (
+          {periodTimes.map((time) => (
             <div
-              key={day}
-              className="text-center text-xs font-semibold text-gray-500 uppercase tracking-wide py-2"
+              key={time}
+              className={cn(
+                "text-center text-xs font-semibold uppercase tracking-wide py-2",
+                isBreakPeriod(time) ? "text-gray-300" : "text-gray-500"
+              )}
             >
-              {day}
+              {formatTime(time)}
             </div>
           ))}
         </div>
 
-        {/* Period rows */}
+        {/* Day rows */}
         <div className="space-y-1">
-          {periodTimes.map((time) => {
-            // Check if this period is a break (all slots unavailable)
-            const periodSlots = slots.filter((s) => s.startTime === time);
-            const isBreak = periodSlots.every((s) => !s.available);
-            const displayTime = formatTime(time);
+          {DAY_LABELS.map((dayLabel, day) => (
+            <div key={day} className="grid gap-1" style={{ gridTemplateColumns: gridCols }}>
+              {/* Day label */}
+              <div className="text-xs font-semibold text-gray-500 pr-2 flex items-center justify-end uppercase tracking-wide">
+                {dayLabel}
+              </div>
 
-            if (isBreak) {
-              return (
-                <div key={time} className="grid grid-cols-[80px_repeat(5,1fr)]">
-                  <div className="text-xs text-gray-400 pr-2 pt-1.5 text-right">{displayTime}</div>
-                  <div className="col-span-5 bg-gray-50 border border-dashed border-gray-200 rounded-md flex items-center justify-center py-2">
-                    <span className="text-xs text-gray-400 font-medium">Lunch Break</span>
-                  </div>
-                </div>
-              );
-            }
+              {/* One cell per time period */}
+              {periodTimes.map((time) => {
+                const slot = slotMap.get(`${day}-${time}`);
 
-            return (
-              <div key={time} className="grid grid-cols-[80px_repeat(5,1fr)] gap-1">
-                <div className="text-xs text-gray-400 pr-2 pt-2 text-right whitespace-nowrap">
-                  {displayTime}
-                </div>
-                {[0, 1, 2, 3, 4].map((day) => {
-                  const slot = slotMap.get(`${day}-${time}`);
-                  if (!slot) {
-                    return <div key={day} className="h-16" />;
+                // Break column cell
+                if (isBreakPeriod(time)) {
+                  return (
+                    <div
+                      key={time}
+                      className="h-16 rounded-md bg-gray-50 border border-dashed border-gray-200 flex items-center justify-center"
+                    >
+                      {day === 0 && (
+                        <span className="text-[10px] text-gray-300 font-medium rotate-0">Lunch</span>
+                      )}
+                    </div>
+                  );
+                }
+
+                if (!slot) {
+                  return <div key={time} className="h-16" />;
+                }
+
+                const cellEntries = entryMap.get(slot.id) ?? [];
+                const groupKeys = cellEntries.map((e) => `${e.course.department}-${e.course.level}`);
+
+                if (cellEntries.length === 0) {
+                  if (mode === "admin") {
+                    return (
+                      <button
+                        key={time}
+                        onClick={() => onCellClick?.(null, slot.id, day)}
+                        className="h-16 rounded-md border border-dashed border-gray-200 hover:border-gray-400 hover:bg-gray-50 transition-colors flex items-center justify-center group"
+                      >
+                        <span className="text-gray-300 group-hover:text-gray-500 text-xl leading-none">
+                          +
+                        </span>
+                      </button>
+                    );
                   }
+                  const studyBlock = studyMap.get(slot.id);
+                  if (studyBlock) {
+                    return (
+                      <div
+                        key={time}
+                        className="h-16 rounded-md border border-amber-200 bg-amber-50 px-1.5 py-1 overflow-hidden"
+                      >
+                        <span className="text-[10px] font-semibold text-amber-700 block truncate">
+                          📖 Self Study
+                        </span>
+                        <span className="text-[10px] text-amber-600 block truncate">
+                          {studyBlock.courseCode}
+                        </span>
+                        <span className="text-[10px] text-amber-500 block truncate">
+                          {studyBlock.courseTitle}
+                        </span>
+                      </div>
+                    );
+                  }
+                  return (
+                    <div
+                      key={time}
+                      className="h-16 rounded-md border border-dashed border-gray-100"
+                    />
+                  );
+                }
 
-                  const cellEntries = entryMap.get(slot.id) ?? [];
-                  // Conflict = two entries in same slot share dept+level
-                  const groupKeys = cellEntries.map((e) => `${e.course.department}-${e.course.level}`);
-
-                  if (cellEntries.length === 0) {
-                    if (mode === "admin") {
+                return (
+                  <div key={time} className="flex flex-col gap-0.5">
+                    {cellEntries.map((entry) => {
+                      const colorClass = DEPT_COLORS[deptColorIndex(entry.course.department)];
+                      const entryKey = `${entry.course.department}-${entry.course.level}`;
+                      const isDupe = groupKeys.filter((k) => k === entryKey).length > 1;
                       return (
                         <button
-                          key={day}
-                          onClick={() => onCellClick?.(null, slot.id, day)}
-                          className="h-16 rounded-md border border-dashed border-gray-200 hover:border-gray-400 hover:bg-gray-50 transition-colors flex items-center justify-center group"
+                          key={entry.id}
+                          onClick={() => mode === "admin" && onCellClick?.(entry, slot.id, day)}
+                          disabled={mode === "student"}
+                          className={cn(
+                            "flex-1 min-h-14 rounded-md border px-1.5 py-1 text-left overflow-hidden transition-all",
+                            colorClass,
+                            isDupe && "ring-2 ring-red-500 ring-offset-1",
+                            mode === "admin" && "hover:opacity-80 cursor-pointer",
+                            mode === "student" && "cursor-default"
+                          )}
                         >
-                          <span className="text-gray-300 group-hover:text-gray-500 text-xl leading-none">
-                            +
+                          <div className="flex items-start justify-between gap-0.5">
+                            <span className="text-[11px] font-bold leading-tight truncate">
+                              {entry.course.code}
+                            </span>
+                            {isDupe && (
+                              <AlertTriangle className="w-3 h-3 text-red-600 flex-shrink-0 mt-px" />
+                            )}
+                          </div>
+                          <span className="text-[10px] leading-tight text-current/70 block truncate">
+                            {entry.venue.name}
+                          </span>
+                          <span className="text-[10px] leading-tight text-current/70 block truncate">
+                            {entry.lecturer.name}
                           </span>
                         </button>
                       );
-                    }
-                    const studyBlock = studyMap.get(slot.id);
-                    if (studyBlock) {
-                      return (
-                        <div
-                          key={day}
-                          className="h-16 rounded-md border border-amber-200 bg-amber-50 px-1.5 py-1 overflow-hidden"
-                        >
-                          <span className="text-[10px] font-semibold text-amber-700 block truncate">
-                            📖 Self Study
-                          </span>
-                          <span className="text-[10px] text-amber-600 block truncate">
-                            {studyBlock.courseCode}
-                          </span>
-                          <span className="text-[10px] text-amber-500 block truncate">
-                            {studyBlock.courseTitle}
-                          </span>
-                        </div>
-                      );
-                    }
-                    return (
-                      <div
-                        key={day}
-                        className="h-16 rounded-md border border-dashed border-gray-100"
-                      />
-                    );
-                  }
-
-                  return (
-                    <div key={day} className="flex flex-col gap-0.5">
-                      {cellEntries.map((entry) => {
-                        const colorClass = DEPT_COLORS[deptColorIndex(entry.course.department)];
-                        const entryKey = `${entry.course.department}-${entry.course.level}`;
-                        const isDupe = groupKeys.filter((k) => k === entryKey).length > 1;
-                        return (
-                          <button
-                            key={entry.id}
-                            onClick={() => mode === "admin" && onCellClick?.(entry, slot.id, day)}
-                            disabled={mode === "student"}
-                            className={cn(
-                              "flex-1 min-h-14 rounded-md border px-1.5 py-1 text-left overflow-hidden transition-all",
-                              colorClass,
-                              isDupe && "ring-2 ring-red-500 ring-offset-1",
-                              mode === "admin" && "hover:opacity-80 cursor-pointer",
-                              mode === "student" && "cursor-default"
-                            )}
-                          >
-                            <div className="flex items-start justify-between gap-0.5">
-                              <span className="text-[11px] font-bold leading-tight truncate">
-                                {entry.course.code}
-                              </span>
-                              {isDupe && (
-                                <AlertTriangle className="w-3 h-3 text-red-600 flex-shrink-0 mt-px" />
-                              )}
-                            </div>
-                            <span className="text-[10px] leading-tight text-current/70 block truncate">
-                              {entry.venue.name}
-                            </span>
-                            <span className="text-[10px] leading-tight text-current/70 block truncate">
-                              {entry.lecturer.name}
-                            </span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          })}
+                    })}
+                  </div>
+                );
+              })}
+            </div>
+          ))}
         </div>
       </div>
     </div>

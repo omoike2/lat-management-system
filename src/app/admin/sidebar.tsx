@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
@@ -33,8 +34,8 @@ export default function AdminSidebar({ email, onNavClick }: AdminSidebarProps) {
     <aside className="w-64 bg-white border-r border-(--color-border) h-screen flex flex-col">
       <div className="h-16 flex items-center px-5 bg-(--color-brand)">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-white/15 border border-white/25 flex items-center justify-center flex-shrink-0">
-            <span className="text-white text-sm font-bold leading-none">L</span>
+          <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center flex-shrink-0 overflow-hidden">
+            <Image src="/lasu-logo.png" alt="LASU" width={28} height={28} className="object-contain" />
           </div>
           <div>
             <p className="font-semibold text-white text-sm leading-tight">LAT System</p>

@@ -1,6 +1,8 @@
+import Image from "next/image";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { getStudentById } from "@/features/students/queries";
+import { logoutStudent } from "@/features/students/actions";
 
 export default async function StudentLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
@@ -13,8 +15,8 @@ export default async function StudentLayout({ children }: { children: React.Reac
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2.5">
-              <div className="flex items-center justify-center w-7 h-7 rounded-md bg-white/15 border border-white/25">
-                <span className="text-white text-xs font-bold leading-none">L</span>
+              <div className="flex items-center justify-center w-7 h-7 rounded-md bg-white overflow-hidden">
+                <Image src="/lasu-logo.png" alt="LASU" width={24} height={24} className="object-contain" />
               </div>
               <span className="text-sm font-semibold text-white">LAT System</span>
             </div>
@@ -42,12 +44,20 @@ export default async function StudentLayout({ children }: { children: React.Reac
             )}
           </div>
           {student && (
-            <div className="text-right">
-              <p className="text-sm font-medium text-white">{student.name}</p>
-              <p className="text-xs text-white/60">
-                {student.department} · Level {student.level}
-              </p>
-            </div>
+            <form action={logoutStudent} className="flex items-center gap-3">
+              <div className="text-right hidden sm:block">
+                <p className="text-sm font-medium text-white">{student.name}</p>
+                <p className="text-xs text-white/60">
+                  {student.department} · Level {student.level}
+                </p>
+              </div>
+              <button
+                type="submit"
+                className="text-xs text-white/70 hover:text-white underline underline-offset-2 transition-colors"
+              >
+                Sign out
+              </button>
+            </form>
           )}
         </div>
       </header>

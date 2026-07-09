@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { getLecturerById } from "@/features/lecturers/queries";
@@ -14,8 +15,8 @@ export default async function LecturerLayout({ children }: { children: React.Rea
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2.5">
-              <div className="flex items-center justify-center w-7 h-7 rounded-md bg-white/15 border border-white/25">
-                <span className="text-white text-xs font-bold leading-none">L</span>
+              <div className="flex items-center justify-center w-7 h-7 rounded-md bg-white overflow-hidden">
+                <Image src="/lasu-logo.png" alt="LASU" width={24} height={24} className="object-contain" />
               </div>
               <span className="text-sm font-semibold text-white">LAT — Lecturer</span>
             </div>
