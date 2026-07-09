@@ -7,7 +7,7 @@ import { db } from "@/lib/db";
 import type { ActionResult } from "@/types";
 import { z } from "zod";
 import { RegisterStudentSchema, CourseRegistrationSchema } from "./schema";
-import { sendWelcomeEmail, sendCourseRegistrationEmail } from "@/features/notifications/trigger";
+import { sendWelcomeEmail, sendCourseRegistrationEmail, sendLoginNotificationEmail } from "@/features/notifications/trigger";
 import { rateLimit } from "@/lib/rate-limit";
 
 export async function registerStudent(raw: unknown): Promise<ActionResult> {
@@ -76,6 +76,10 @@ export async function loginStudent(raw: unknown): Promise<ActionResult> {
     maxAge: 60 * 60 * 24 * 365,
     sameSite: "lax",
   });
+
+  sendLoginNotificationEmail(student.name, student.email).catch(
+    (err) => console.error("[email] login notification failed:", err)
+  );
 
   return { success: true };
 }

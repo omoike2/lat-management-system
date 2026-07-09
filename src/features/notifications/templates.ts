@@ -78,6 +78,22 @@ function baseLayout(title: string, body: string): string {
 </html>`;
 }
 
+type LoginNotificationParams = {
+  studentName: string;
+};
+
+export function loginNotificationEmailHtml(params: LoginNotificationParams): string {
+  const name = esc(params.studentName);
+  const body = `
+    <h2 style="margin:0 0 8px;color:#0f172a;font-size:20px;font-weight:700;">New sign-in</h2>
+    <p style="margin:0 0 20px;color:#64748b;font-size:14px;">Hi ${name}, your student account was just accessed.</p>
+    <p style="margin:0 0 24px;color:#64748b;font-size:13px;">
+      If this was you, no action is needed. If you did not sign in, your matric number may be known
+      to someone else — contact your department administrator.
+    </p>`;
+  return baseLayout("New sign-in to your LAT account", body);
+}
+
 export function welcomeEmailHtml(params: WelcomeParams): string {
   const name = esc(params.studentName);
   const dept = esc(params.department);

@@ -2,11 +2,23 @@
 
 import { db } from "@/lib/db";
 import { mailer } from "@/lib/mailer";
-import { reminderEmailHtml, changeEmailHtml, welcomeEmailHtml, courseRegistrationEmailHtml } from "./templates";
+import { reminderEmailHtml, changeEmailHtml, welcomeEmailHtml, courseRegistrationEmailHtml, loginNotificationEmailHtml } from "./templates";
 import type { ChangeType } from "@/types";
 import { DAY_LABELS } from "@/types";
 
 const FROM = `LAT System <${process.env.GMAIL_USER}>`;
+
+export async function sendLoginNotificationEmail(
+  studentName: string,
+  email: string
+): Promise<void> {
+  await mailer.sendMail({
+    from: FROM,
+    to: email,
+    subject: "New sign-in to your LAT account",
+    html: loginNotificationEmailHtml({ studentName }),
+  });
+}
 
 export async function sendWelcomeEmail(
   studentName: string,
