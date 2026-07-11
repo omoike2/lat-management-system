@@ -10,6 +10,7 @@ import {
   Users,
   Building2,
   CalendarDays,
+  GraduationCap,
   LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -19,6 +20,7 @@ const NAV_ITEMS = [
   { href: "/admin/courses", label: "Courses", icon: BookOpen },
   { href: "/admin/lecturers", label: "Lecturers", icon: Users },
   { href: "/admin/venues", label: "Venues", icon: Building2 },
+  { href: "/admin/students", label: "Students", icon: GraduationCap },
   { href: "/admin/timetable", label: "Timetable", icon: CalendarDays },
 ] as const;
 

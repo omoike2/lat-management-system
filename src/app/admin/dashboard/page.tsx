@@ -51,7 +51,7 @@ export default async function DashboardPage() {
       label: "Students",
       value: stats.students,
       icon: GraduationCap,
-      href: "/student/register",
+      href: "/admin/students",
       iconBg: "bg-teal-50",
       iconColor: "text-teal-600",
       accent: "before:bg-teal-500",

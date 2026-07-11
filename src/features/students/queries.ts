@@ -42,6 +42,13 @@ export async function listCoursesForRegistration(): Promise<Course[]> {
   return db.course.findMany({ orderBy: [{ department: "asc" }, { level: "asc" }, { code: "asc" }] });
 }
 
+export async function listAllStudents() {
+  return db.student.findMany({
+    orderBy: [{ department: "asc" }, { level: "asc" }, { name: "asc" }],
+    include: { _count: { select: { courses: true } } },
+  });
+}
+
 /** All courses a student is studying: dept+level courses plus any explicitly registered extras. */
 export async function getStudentCourses(
   studentId: string,
