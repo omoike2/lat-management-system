@@ -83,7 +83,7 @@ export function TimetableGrid({ entries, slots, mode, studyBlocks, onCellClick }
         {/* Day rows */}
         <div className="space-y-1">
           {DAY_LABELS.map((dayLabel, day) => (
-            <div key={day} className="grid gap-1" style={{ gridTemplateColumns: gridCols }}>
+            <div key={day} className="grid gap-1 mb-5" style={{ gridTemplateColumns: gridCols }}>
               {/* Day label */}
               <div className="text-xs font-semibold text-gray-500 pr-2 flex items-center justify-end uppercase tracking-wide">
                 {dayLabel}
